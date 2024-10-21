@@ -24,10 +24,13 @@ import gymApp.bbdd.pojos.Ejercicio;
 import gymApp.bbdd.pojos.Workout;
 import gymApp.logica.ControladorWorkouts;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PanelWorkouts {
 	private JPanel panel = null;
-	private ControladorWorkouts controladorWorkouts = null;
+	private ControladorWorkouts controladorWorkouts = new ControladorWorkouts();
 	private ArrayList<Workout> workouts;
 	private JPanel labelPanel = null;
 	private JLabel infoWorkout = null;
@@ -46,6 +49,34 @@ public class PanelWorkouts {
 
 		JScrollPane scrollPaneExercises = new JScrollPane();
 		scrollPaneExercises.setBounds(970, 118, 519, 750);
+		scrollPaneExercises.setBorder(null);
+		scrollPaneExercises.setOpaque(false);
+		scrollPaneExercises.getViewport().setOpaque(false);
+
+		labelPanel = new JPanel();
+		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+		labelPanel.setOpaque(false);
+		labelPanel.setBounds(0, 0, panel.getWidth(), panel.getHeight());
+
+		JScrollPane scrollPaneWorkout = new JScrollPane(labelPanel);
+		scrollPaneWorkout.setBounds(21, 118, 432, 760);
+
+		scrollPaneWorkout.setBorder(null);
+		scrollPaneWorkout.setOpaque(false);
+		scrollPaneWorkout.getViewport().setOpaque(false);
+
+		JButton btnHistorico = new JButton("Historico");
+
+		btnHistorico.setBounds(1201, 43, 89, 23);
+		panel.add(btnHistorico);
+
+		JLabel botonPerfil = new JLabel("");
+		botonPerfil.setBounds(1384, 11, 91, 87);
+		panel.add(botonPerfil);
+		scrollPaneWorkout.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneWorkout.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		panel.add(scrollPaneWorkout);
 		panel.add(scrollPaneExercises);
 
 		tableExercises = new JTable(model);
@@ -66,12 +97,6 @@ public class PanelWorkouts {
 		backgroundLabel.setIcon(new ImageIcon(PanelLogin.class.getResource("/images/WORKOUTS.png")));
 		panel.add(backgroundLabel);
 
-		labelPanel = new JPanel();
-		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
-		labelPanel.setOpaque(false);
-		labelPanel.setBounds(0, 0, panel.getWidth(), panel.getHeight());
-
-		ControladorWorkouts controladorWorkouts = new ControladorWorkouts();
 		ArrayList<Workout> workouts = controladorWorkouts.getAllWorkouts();
 
 		for (Workout workout : workouts) {
@@ -94,21 +119,33 @@ public class PanelWorkouts {
 			labelPanel.add(label);
 			labelPanel.add(Box.createVerticalStrut(10));
 		}
-
-		JScrollPane scrollPaneWorkout = new JScrollPane(labelPanel);
-		scrollPaneWorkout.setBounds(21, 118, 432, 760);
-
-		scrollPaneWorkout.setBorder(null);
-		scrollPaneWorkout.setOpaque(false);
-		scrollPaneWorkout.getViewport().setOpaque(false);
-		scrollPaneWorkout.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneWorkout.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		panel.add(scrollPaneWorkout);
 		panel.setComponentZOrder(backgroundLabel, panel.getComponentCount() - 1);
 
 		panel.revalidate();
 		panel.repaint();
+
+		botonPerfil.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				paneles.get(0).setVisible(false);
+				paneles.get(1).setVisible(false);
+				paneles.get(2).setVisible(false);
+				paneles.get(3).setVisible(false);
+				paneles.get(4).setVisible(true);
+			}
+		});
+
+		btnHistorico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				paneles.get(0).setVisible(false);
+				paneles.get(1).setVisible(false);
+				paneles.get(2).setVisible(false);
+				paneles.get(3).setVisible(false);
+				paneles.get(4).setVisible(false);
+				paneles.get(5).setVisible(true);
+			}
+		});
 	}
 
 	private void addClickListener(JLabel label, Workout workout) {
@@ -124,11 +161,12 @@ public class PanelWorkouts {
 	}
 
 	private void showExercisesTable(String id) {
+
 		exercises = controladorWorkouts.getExercisesById(id);
 		model.setRowCount(0);
 
 		for (Ejercicio ejercicio : exercises) {
-			Object[] vector = {ejercicio.getName()};
+			Object[] vector = { ejercicio.getName() };
 			model.addRow(vector);
 		}
 

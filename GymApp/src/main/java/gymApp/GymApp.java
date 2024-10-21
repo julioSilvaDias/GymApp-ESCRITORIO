@@ -54,7 +54,7 @@ public class GymApp extends JFrame {
 
 		PanelLogin panelLogin = new PanelLogin(paneles);
 		JPanel panel1 = panelLogin.getPanel();
-		panel1.setVisible(false);
+		panel1.setVisible(true);
 
 		paneles.add(panel1);
 		frame.getContentPane().add(panel1);
@@ -68,7 +68,7 @@ public class GymApp extends JFrame {
 
 		PanelWorkouts panelWorkout = new PanelWorkouts(paneles);
 		JPanel panel3 = panelWorkout.getPanel();
-		panel3.setVisible(true);
+		panel3.setVisible(false);
 
 		paneles.add(panel3);
 		frame.getContentPane().add(panel3);

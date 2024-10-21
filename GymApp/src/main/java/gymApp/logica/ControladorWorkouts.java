@@ -22,7 +22,7 @@ public class ControladorWorkouts {
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 		
 		GestorEjercicio gestorEjercicio = new GestorEjercicio();
-		ret = gestorEjercicio.getExercisesbyId(id);
+		ret = gestorEjercicio.getNameExercisesbyId(id);
 		
 		return ret;
 	}

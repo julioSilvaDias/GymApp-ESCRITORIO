@@ -16,24 +16,28 @@ import com.google.cloud.firestore.QuerySnapshot;
 import gymApp.bbdd.pojos.Ejercicio;
 
 public class GestorEjercicio {
-	public ArrayList<Ejercicio> getExercisesbyId(String id) {
+	
+	public ArrayList<Ejercicio> getNameExercisesbyId(String id) {
+
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 		try {
 			InputStream fileInputStream = getClass().getResourceAsStream("/utils/gymapp.json");
-			;
+
 			FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
 					.setProjectId("gymapp-4565e").setCredentials(GoogleCredentials.fromStream(fileInputStream)).build();
 			Firestore firestore = firestoreOptions.getService();
 
 			CollectionReference workouts = firestore.collection("Workouts");
 			DocumentReference workout = workouts.document(id);
-			ApiFuture<QuerySnapshot> query = firestore.collection("Exercises").get();
+			ApiFuture<QuerySnapshot> query = workout.collection("Exercises").get();
 			QuerySnapshot querySnapshot = query.get();
 			List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
 
 			for (QueryDocumentSnapshot exe : exercises) {
 				Ejercicio exercise = new Ejercicio();
 				exercise.setName(exe.getString("name"));
+				System.out.print(exercise.getName());
+				ret.add(exercise);
 
 			}
 
