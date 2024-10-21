@@ -38,7 +38,7 @@ public class GestorWorkout {
 				workout.setName(wkt.getString("name"));
 				workout.setExercises(wkt.getLong("exercises").intValue());
 				workout.setVideo(wkt.getString("URL"));
-				workout.setNivel(wkt.getLong("nivel").intValue());
+				workout.setNivel(wkt.getLong("level").intValue());
 				
 				ret.add(workout);
 			}

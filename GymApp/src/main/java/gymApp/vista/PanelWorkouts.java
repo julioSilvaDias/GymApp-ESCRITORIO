@@ -124,13 +124,13 @@ public class PanelWorkouts {
 	}
 
 	private void showExercisesTable(String id) {
-		/*exercises = controladorWorkouts.getExercisesById(id);
+		exercises = controladorWorkouts.getExercisesById(id);
 		model.setRowCount(0);
 
 		for (Ejercicio ejercicio : exercises) {
 			Object[] vector = {ejercicio.getName()};
 			model.addRow(vector);
-		}*/
+		}
 
 	}
 
