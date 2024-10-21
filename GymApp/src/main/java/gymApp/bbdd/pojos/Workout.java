@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public class Workout {
 	
-	int id;
+	String id;
 	String video;
 	int exercises;
 	String name;
 	int nivel;
 	@Override
 	public int hashCode() {
-		return Objects.hash(exercises, name, nivel, video);
+		return Objects.hash(exercises, id, name, nivel, video);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -22,8 +22,14 @@ public class Workout {
 		if (getClass() != obj.getClass())
 			return false;
 		Workout other = (Workout) obj;
-		return exercises == other.exercises && Objects.equals(name, other.name) && nivel == other.nivel
-				&& Objects.equals(video, other.video);
+		return exercises == other.exercises && id == other.id && Objects.equals(name, other.name)
+				&& nivel == other.nivel && Objects.equals(video, other.video);
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getVideo() {
 		return video;
@@ -51,8 +57,11 @@ public class Workout {
 	}
 	@Override
 	public String toString() {
-		return "Workout [video=" + video + ", exercises=" + exercises + ", name=" + name + ", nivel=" + nivel + "]";
+		return "Workout [id=" + id + ", video=" + video + ", exercises=" + exercises + ", name=" + name + ", nivel="
+				+ nivel + "]";
 	}
+	
+	
 	
 	
 }

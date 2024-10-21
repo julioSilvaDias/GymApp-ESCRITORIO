@@ -1,5 +1,13 @@
 package gymApp.bbdd.gestor;
 
-public class GestorEjercicio {
+import java.util.ArrayList;
 
+import gymApp.bbdd.pojos.Ejercicio;
+
+public class GestorEjercicio {
+	public ArrayList<Ejercicio> getExercisesbyId(String id){
+		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
+		
+		return ret;
+	}
 }
