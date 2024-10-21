@@ -2,6 +2,7 @@ package gymApp.bbdd.gestor;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -20,7 +21,7 @@ public class GestorUsuario {
 		
 		Usuario usuario = new Usuario();
 		
-		FileInputStream serviceAccount = new FileInputStream("gymapp.json");
+		InputStream serviceAccount = getClass().getResourceAsStream("/utils/gymapp.json");
 		
 		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("gymapp-4565e").setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
 		
