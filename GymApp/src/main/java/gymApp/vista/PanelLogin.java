@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
@@ -45,7 +46,7 @@ public class PanelLogin {
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				paneles.get(0).setVisible(false);
 				paneles.get(1).setVisible(true);
 				paneles.get(2).setVisible(false);
@@ -63,28 +64,29 @@ public class PanelLogin {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				boolean comprobando = false;
-				
-				
 				controladorLogin users = new controladorLogin();
+
+				String check = "";
+
 				try {
-					comprobando = users.checkLogin(textFieldUser.getText(), textFieldPassword.getText(), comprobando);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					check = users.checkLogin(textFieldUser.getText(), textFieldPassword.getText());
+				} catch (InterruptedException | ExecutionException | IOException e1) {
+					JOptionPane.showMessageDialog(null, "Error al conectar a los datos del Usuario");
 				}
 
-				paneles.get(0).setVisible(false);
-				paneles.get(1).setVisible(false);
-				paneles.get(2).setVisible(true);
-				paneles.get(3).setVisible(false);
-				paneles.get(4).setVisible(false);
+				if ("Correct Login".equals(check)) {
+					JOptionPane.showMessageDialog(null, "Correct Login");
+					paneles.get(0).setVisible(false);
+					paneles.get(1).setVisible(false);
+					paneles.get(2).setVisible(true);
+					paneles.get(3).setVisible(false);
+					paneles.get(4).setVisible(false);
+				} else if ("User does not exist".equals(check)) {
+					JOptionPane.showMessageDialog(null, "Incorrect username or password");
+				} else {
+					JOptionPane.showMessageDialog(null, "Incorrect username or passwords");
+				}
+
 			}
 		});
 		btnLogin.setFont(new Font("Corbel", Font.BOLD, 25));
