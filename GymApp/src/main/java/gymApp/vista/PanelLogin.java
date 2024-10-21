@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import gymApp.logica.controladorLogin;
+import gymApp.logica.ControladorLogin;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -64,7 +64,7 @@ public class PanelLogin {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				controladorLogin users = new controladorLogin();
+				ControladorLogin users = new ControladorLogin();
 
 				String check = "";
 
@@ -72,6 +72,7 @@ public class PanelLogin {
 					check = users.checkLogin(textFieldUser.getText(), textFieldPassword.getText());
 				} catch (InterruptedException | ExecutionException | IOException e1) {
 					JOptionPane.showMessageDialog(null, "Error al conectar a los datos del Usuario");
+
 				}
 
 				if ("Correct Login".equals(check)) {

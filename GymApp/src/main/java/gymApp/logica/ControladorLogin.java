@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 import gymApp.bbdd.gestor.GestorUsuario;
 import gymApp.bbdd.pojos.Usuario;
 
-public class controladorLogin {
+public class ControladorLogin {
 
 	public String checkLogin(String login, String password)
 			throws InterruptedException, ExecutionException, IOException {
