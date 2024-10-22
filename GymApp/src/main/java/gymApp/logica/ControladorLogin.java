@@ -9,7 +9,7 @@ import gymApp.bbdd.pojos.Usuario;
 public class ControladorLogin {
 
 	public String checkLogin(String login, String password)
-			throws InterruptedException, ExecutionException, IOException {
+			throws InterruptedException, ExecutionException, IOException, Exception {
 
 		GestorUsuario gestorUsuario = new GestorUsuario();
 

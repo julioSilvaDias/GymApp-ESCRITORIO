@@ -19,13 +19,19 @@ import com.google.cloud.firestore.QuerySnapshot;
 import gymApp.bbdd.pojos.Workout;
 
 public class GestorWorkout {
+	private Connection connection = null;
+	private Firestore firestore = null;
+
+	public GestorWorkout() {
+		connection = new Connection();
+
+	}
+	
 	public ArrayList<Workout> getAllWorkouts() {
 		ArrayList<Workout> ret = new ArrayList<Workout>();
 		try {
-			InputStream fileInputStream = getClass().getResourceAsStream("/utils/gymapp.json");;
-			FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
-					.setProjectId("gymapp-4565e").setCredentials(GoogleCredentials.fromStream(fileInputStream)).build();
-			Firestore firestore = firestoreOptions.getService();
+
+			firestore = connection.connection();
 
 			ApiFuture<QuerySnapshot> query = firestore.collection("Workouts").get();
 			QuerySnapshot querySnapshot = query.get();
@@ -42,6 +48,8 @@ public class GestorWorkout {
 				
 				ret.add(workout);
 			}
+			
+			firestore.close();
 
 		} catch (FileNotFoundException fileNotFoundException) {
 
@@ -51,8 +59,10 @@ public class GestorWorkout {
 
 		} catch (InterruptedException interruptedException) {
 
+		}catch (Exception e) {
+			
 		}
-		;
+		
 		return ret;
 	}
 }
