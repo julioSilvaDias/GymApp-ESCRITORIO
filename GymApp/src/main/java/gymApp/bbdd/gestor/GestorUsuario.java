@@ -12,29 +12,29 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import gymApp.bbdd.Connection;
 
 import gymApp.bbdd.pojos.Usuario;
 
-public class GestorUsuario {
+public class GestorUsuario extends GestorAbstract{
 	
-	private Connection connection = null;
 	private Firestore db = null;
 
 	public GestorUsuario() {
-		connection = new Connection();
+		super();
 
 	}
 	
 	public Usuario obtenerUserAndPassword(String login, String password) throws InterruptedException, ExecutionException, IOException, Exception {
-		db = connection.connection();
+		db = connection.getConnection();
 		Usuario usuario = new Usuario();
 		
-		ApiFuture<QuerySnapshot> query = db.collection("Users").whereEqualTo("name", login).whereEqualTo("password", password).get();
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).whereEqualTo(KEY_NAME, login).whereEqualTo(KEY_PASSWORD, password).get();
 		QuerySnapshot querySnapshot = query.get();
 		List <QueryDocumentSnapshot> users = querySnapshot.getDocuments();
 		for(QueryDocumentSnapshot user : users) {
-			usuario.setName(user.getString("name"));
-			usuario.setPassword(user.getString("password"));
+			usuario.setName(user.getString(KEY_NAME));
+			usuario.setPassword(user.getString(KEY_PASSWORD));
 		}
 		
 		db.close();

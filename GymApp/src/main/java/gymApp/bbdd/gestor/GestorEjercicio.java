@@ -11,38 +11,39 @@ import com.google.cloud.firestore.QuerySnapshot;
 
 import gymApp.bbdd.pojos.Ejercicio;
 
-public class GestorEjercicio {
+public class GestorEjercicio extends GestorAbstract {
 
-	private Connection connection = null;
 	private Firestore firestore = null;
 
 	public GestorEjercicio() {
-		connection = new Connection();
-
+		super();
 	}
 
-	public ArrayList<Ejercicio> getNameExercisesbyId(String id) {
-		firestore = connection.connection();
+	public ArrayList<Ejercicio> getNameExercisesbyId(String id) throws Exception {
+		firestore = connection.getConnection();
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 		try {
-
-			CollectionReference workouts = firestore.collection("Workouts");
+			CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
 			DocumentReference workout = workouts.document(id);
-			ApiFuture<QuerySnapshot> query = workout.collection("Exercises").get();
-			QuerySnapshot querySnapshot = query.get();
-			List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
 
+			ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).get();
+			QuerySnapshot querySnapshot = query.get();
+
+			List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
 			for (QueryDocumentSnapshot exe : exercises) {
 				Ejercicio exercise = new Ejercicio();
-				exercise.setName(exe.getString("name"));
+				exercise.setName(exe.getString(KEY_NAME));
 				ret.add(exercise);
-
 			}
-			firestore.close();
 		} catch (Exception e) {
-
+			throw e;
+		} finally {
+			try {
+				firestore.close();
+			} catch (Exception e) {
+				// Nothing to do here...
+			}
 		}
-
 		return ret;
 	}
 }

@@ -9,15 +9,15 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-
+import gymApp.bbdd.Connection;
 import gymApp.bbdd.pojos.Workout;
 
-public class GestorWorkout {
-	private Connection connection = null;
+public class GestorWorkout extends GestorAbstract{
+
 	private Firestore firestore = null;
 
 	public GestorWorkout() {
-		connection = new Connection();
+		super();;
 
 	}
 	
@@ -25,9 +25,9 @@ public class GestorWorkout {
 		ArrayList<Workout> ret = new ArrayList<Workout>();
 		try {
 
-			firestore = connection.connection();
+			firestore = connection.getConnection();
 
-			ApiFuture<QuerySnapshot> query = firestore.collection("Workouts").get();
+			ApiFuture<QuerySnapshot> query = firestore.collection(COLLECTION_WORKOUTS).get();
 			QuerySnapshot querySnapshot = query.get();
 			List<QueryDocumentSnapshot> workouts = querySnapshot.getDocuments();
 			ret = new ArrayList<Workout>();
@@ -35,10 +35,10 @@ public class GestorWorkout {
 			for (QueryDocumentSnapshot wkt : workouts) {
 				Workout workout = new Workout();
 				workout.setId(wkt.getId());
-				workout.setName(wkt.getString("name"));
-				workout.setExercises(wkt.getLong("exercises").intValue());
-				workout.setVideo(wkt.getString("URL"));
-				workout.setNivel(wkt.getLong("level").intValue());
+				workout.setName(wkt.getString(KEY_NAME));
+				workout.setExercises(wkt.getLong(KEY_EXERCICSES).intValue());
+				workout.setVideo(wkt.getString(KEY_URL));
+				workout.setNivel(wkt.getLong(KEY_LEVEL).intValue());
 				
 				ret.add(workout);
 			}

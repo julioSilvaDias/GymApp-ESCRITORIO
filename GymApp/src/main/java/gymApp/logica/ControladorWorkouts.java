@@ -18,12 +18,7 @@ public class ControladorWorkouts {
 		return ret;
 	}
 	
-	public ArrayList<Ejercicio> getExercisesById(String id){
-		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
-		
-		GestorEjercicio gestorEjercicio = new GestorEjercicio();
-		ret = gestorEjercicio.getNameExercisesbyId(id);
-		
-		return ret;
+	public ArrayList<Ejercicio> getExercisesById(String id) throws Exception{
+		return new GestorEjercicio().getNameExercisesbyId(id);
 	}
 }
