@@ -21,10 +21,8 @@ public class GestorWorkout extends GestorAbstract{
 
 	}
 	
-	public ArrayList<Workout> getAllWorkouts() {
+	public ArrayList<Workout> getAllWorkouts() throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception{
 		ArrayList<Workout> ret = new ArrayList<Workout>();
-		try {
-
 			firestore = connection.getConnection();
 
 			ApiFuture<QuerySnapshot> query = firestore.collection(COLLECTION_WORKOUTS).get();
@@ -44,18 +42,6 @@ public class GestorWorkout extends GestorAbstract{
 			}
 			
 			firestore.close();
-
-		} catch (FileNotFoundException fileNotFoundException) {
-
-		} catch (IOException ioexception) {
-
-		} catch (ExecutionException executionException) {
-
-		} catch (InterruptedException interruptedException) {
-
-		}catch (Exception e) {
-			
-		}
 		
 		return ret;
 	}

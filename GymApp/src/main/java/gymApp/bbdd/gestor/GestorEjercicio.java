@@ -1,7 +1,11 @@
 package gymApp.bbdd.gestor;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -19,31 +23,25 @@ public class GestorEjercicio extends GestorAbstract {
 		super();
 	}
 
-	public ArrayList<Ejercicio> getNameExercisesbyId(String id) throws Exception {
+	public ArrayList<Ejercicio> getNameExercisesbyId(String id)
+			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
 		firestore = connection.getConnection();
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
-		try {
-			CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
-			DocumentReference workout = workouts.document(id);
 
-			ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).get();
-			QuerySnapshot querySnapshot = query.get();
+		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
+		DocumentReference workout = workouts.document(id);
 
-			List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
-			for (QueryDocumentSnapshot exe : exercises) {
-				Ejercicio exercise = new Ejercicio();
-				exercise.setName(exe.getString(KEY_NAME));
-				ret.add(exercise);
-			}
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			try {
-				firestore.close();
-			} catch (Exception e) {
-				// Nothing to do here...
-			}
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).get();
+		QuerySnapshot querySnapshot = query.get();
+
+		List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
+		for (QueryDocumentSnapshot exe : exercises) {
+			Ejercicio exercise = new Ejercicio();
+			exercise.setName(exe.getString(KEY_NAME));
+			ret.add(exercise);
 		}
+		firestore.close();
+
 		return ret;
 	}
 }
