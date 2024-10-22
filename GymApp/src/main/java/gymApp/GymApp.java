@@ -1,13 +1,9 @@
 package gymApp;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import gymApp.vista.PanelEjercicio;
 import gymApp.vista.PanelHistorico;
 import gymApp.vista.PanelLogin;
