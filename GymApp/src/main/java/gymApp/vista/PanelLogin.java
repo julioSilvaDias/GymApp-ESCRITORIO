@@ -79,6 +79,8 @@ public class PanelLogin {
 
 				if ("Correct Login".equals(check)) {
 					JOptionPane.showMessageDialog(null, "Correct Login");
+					//PanelPerfil panelPerfil = (PanelPerfil) paneles.get(2);
+					//panelPerfil.loadUserData();
 					paneles.get(0).setVisible(false);
 					paneles.get(1).setVisible(false);
 					paneles.get(2).setVisible(true);

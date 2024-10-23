@@ -8,6 +8,11 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import gymApp.bbdd.gestor.GestorUsuario;
+import gymApp.bbdd.pojos.Usuario;
+import gymApp.logica.ControladorPerfil;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -15,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 public class PanelPerfil {
 	private JPanel panel = null;
-	private JTextField textFieldName;
+	public JTextField textFieldName;
 	private JTextField textFieldSurname;
 	private JTextField textFieldBirthdate;
 	private JTextField textFieldPassword;
@@ -132,6 +137,13 @@ public class PanelPerfil {
 		panel.add(fondo);
 	}
 
+	public void loadUserData() {
+		GestorUsuario gestorUsuario = new GestorUsuario();
+		Usuario user = new Usuario();
+		gestorUsuario.getAllData(textFieldName.setText(user.getName()), textFieldSurname.setText(user.getSurname()), textFieldBirthdate.setText(user.getBrithdate()), textFieldEmail.setText(user.getEmail()), textFieldPassword.setText(user.getPassword()));
+		textFieldName.setText(user.getName);
+	}
+	
 	public JPanel getPanel() {
 		return panel;
 	}

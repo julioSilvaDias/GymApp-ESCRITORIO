@@ -68,5 +68,26 @@ public class GestorUsuario extends GestorAbstract{
 		db.close();
 
 	}
+	
+	public Usuario getAllData(String name, String surname, String birthdate, String email, String password) throws Exception {
+		
+		db = connection.getConnection();
+		Usuario usuario = new Usuario();
+		
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).get();
+		QuerySnapshot querySnapshot = query.get();
+		List <QueryDocumentSnapshot> users = querySnapshot.getDocuments();
+		for(QueryDocumentSnapshot user : users) {
+			usuario.setName(user.getString("name"));
+			usuario.setSurname(user.getString("surname"));
+			usuario.setBrithdate(user.getString("birthdate"));
+			usuario.setEmail(user.getString("email"));
+			usuario.setPassword(user.getString("password"));
+		}
+		
+		db.close();
+		
+		return usuario;
+	}
 
 }
