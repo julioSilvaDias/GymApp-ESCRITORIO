@@ -31,8 +31,10 @@ public class PanelEjercicio {
 		int rest = 0;
 		try {
 			Ejercicio exercise = new ControladorEjercicio().getInfo();
-			nameExercise = exercise.getName();
+			nameExercise = exercise.getNameExercise();
 			descExercise = exercise.getDescription();
+			rest = exercise.getRest();
+			nameWorkout = exercise.getName();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -45,14 +47,14 @@ public class PanelEjercicio {
 		lblTimeKeeperWorkout.setBounds(10, 110, 482, 101);
 		panel.add(lblTimeKeeperWorkout);
 		
-		JLabel lblExercise = new JLabel(nameExercise + "-" + descExercise);
+		JLabel lblExercise = new JLabel(nameExercise + " - " + descExercise);
 		lblExercise.setForeground(Color.WHITE);
 		lblExercise.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblExercise.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		lblExercise.setBounds(502, 110, 482, 101);
 		panel.add(lblExercise);
 		
-		JLabel lblWorkout = new JLabel("");
+		JLabel lblWorkout = new JLabel(nameWorkout);
 		lblWorkout.setForeground(Color.WHITE);
 		lblWorkout.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblWorkout.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
@@ -66,9 +68,9 @@ public class PanelEjercicio {
 		lblExerciseTime.setBounds(10, 236, 250, 50);
 		panel.add(lblExerciseTime);
 		
-		JLabel lblRest = new JLabel("Descanso: ");
+		JLabel lblRest = new JLabel("Descanso: " + rest + "s");
 		lblRest.setForeground(Color.WHITE);
-		lblRest.setFont(new Font("Corbel", Font.BOLD, 20));
+		lblRest.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblRest.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		lblRest.setBounds(10, 297, 250, 50);
 		panel.add(lblRest);
@@ -78,9 +80,8 @@ public class PanelEjercicio {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnStart.setBorderPainted(false);
 		btnStart.setBackground(new Color(0, 128, 64));
-		btnStart.setBounds(718, 790, 50, 50);
+		btnStart.setBounds(718, 765, 50, 50);
 		panel.add(btnStart);
 		
 		JButton btnExit = new JButton("Exit");
@@ -96,15 +97,14 @@ public class PanelEjercicio {
 		});
 		btnExit.setForeground(new Color(255, 255, 255));
 		btnExit.setFont(new Font("Corbel", Font.BOLD, 15));
-		btnExit.setBorderPainted(false);
 		btnExit.setBackground(new Color(255, 0, 0));
-		btnExit.setBounds(1340, 830, 136, 25);
+		btnExit.setBounds(1335, 790, 136, 25);
 		panel.add(btnExit);
 		
 		JLabel fondo = new JLabel("");
 		fondo.setBackground(new Color(240, 240, 240));
 		fondo.setIcon(new ImageIcon(PanelEjercicio.class.getResource("/images/EJERCICIO.png")));
-		fondo.setBounds(10, 0, 1489, 867);
+		fondo.setBounds(0, 0, 1499, 867);
 		panel.add(fondo);
 	}
 	

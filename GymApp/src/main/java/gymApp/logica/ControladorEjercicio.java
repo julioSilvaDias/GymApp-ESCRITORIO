@@ -5,6 +5,7 @@ import gymApp.bbdd.pojos.Ejercicio;
 
 public class ControladorEjercicio {
 
+
 	public Ejercicio getInfo() throws Exception {
 		return new GestorEjercicio().getInfo();
 	}

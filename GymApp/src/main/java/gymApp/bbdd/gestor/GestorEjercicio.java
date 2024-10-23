@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -44,17 +45,26 @@ public class GestorEjercicio extends GestorAbstract {
 
 		return ret;
 	}
-
 	public Ejercicio getInfo() throws Exception {
 		firestore = connection.getConnection();
 		Ejercicio exercise = new Ejercicio();
 
-		ApiFuture<QuerySnapshot> query = firestore.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
+		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
+		DocumentReference workout = workouts.document("001");
+
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
 		QuerySnapshot querySnapshot = query.get();
 		List<QueryDocumentSnapshot> Exercise = querySnapshot.getDocuments();
 		for (QueryDocumentSnapshot exer : Exercise) {
-			exercise.setName(exer.getString(KEY_NAME));
+			exercise.setNameExercise(exer.getString(KEY_NAME));
 			exercise.setDescription(exer.getString("description"));
+			exercise.setRest(exer.getLong("rest").intValue());
+			if (exer.getData().get("workout") != null) {
+				DocumentReference workoutRef = (DocumentReference) exer.getData().get("workout");
+				ApiFuture<DocumentSnapshot> queryWorkout = firestore.collection("Workouts").document(workoutRef.getId())
+						.get();
+				exercise.setName(queryWorkout.get().getString(KEY_NAME));
+			}
 		}
 		firestore.close();
 
