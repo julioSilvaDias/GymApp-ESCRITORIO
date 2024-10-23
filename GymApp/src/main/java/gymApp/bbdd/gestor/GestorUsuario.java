@@ -1,18 +1,17 @@
 package gymApp.bbdd.gestor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import gymApp.bbdd.Connection;
 
 import gymApp.bbdd.pojos.Usuario;
 
@@ -40,6 +39,34 @@ public class GestorUsuario extends GestorAbstract{
 		db.close();
 		
 	return usuario;
+	}
+	
+	public void addUser(String name, String surname, String email, String birthdate, String password) throws Exception {
+		db = connection.getConnection();
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).get();
+		QuerySnapshot querySnapshot = query.get();
+		List<QueryDocumentSnapshot> idUsers  = querySnapshot.getDocuments();
+		String lastId = null;
+		int id;
+		for (QueryDocumentSnapshot idUser : idUsers) {
+			lastId = idUser.getId();
+		}
+		id = Integer.parseInt(lastId) + 1;
+		String newId = "00" + String.valueOf(id);
+		
+		CollectionReference users = db.collection(COLLECTION_USERS);
+		DocumentReference user = users.document(newId);
+
+		Map<String, Object> userNew = new HashMap<>();
+		userNew.put("name", name);
+		userNew.put("surname", surname);
+		userNew.put("birthdate", birthdate);
+		userNew.put("email", email);
+		userNew.put("password", password);
+		user.set(userNew);
+		
+		db.close();
+
 	}
 
 }
