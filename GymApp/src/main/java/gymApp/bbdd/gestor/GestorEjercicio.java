@@ -46,4 +46,20 @@ public class GestorEjercicio extends GestorAbstract {
 		}
 		return ret;
 	}
+
+	public Ejercicio getInfo() throws Exception {
+		firestore = connection.getConnection();
+		Ejercicio exercise = new Ejercicio();
+
+		ApiFuture<QuerySnapshot> query = firestore.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
+		QuerySnapshot querySnapshot = query.get();
+		List<QueryDocumentSnapshot> Exercise = querySnapshot.getDocuments();
+		for (QueryDocumentSnapshot exer : Exercise) {
+			exercise.setName(exer.getString(KEY_NAME));
+			exercise.setDescription(exer.getString("description"));
+		}
+		firestore.close();
+
+		return exercise;
+	}
 }
