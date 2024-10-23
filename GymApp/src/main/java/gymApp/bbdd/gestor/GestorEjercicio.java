@@ -1,49 +1,47 @@
 package gymApp.bbdd.gestor;
 
-import java.io.InputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
 import gymApp.bbdd.pojos.Ejercicio;
 
-public class GestorEjercicio {
-	
-	public ArrayList<Ejercicio> getNameExercisesbyId(String id) {
+public class GestorEjercicio extends GestorAbstract {
 
+	private Firestore firestore = null;
+
+	public GestorEjercicio() {
+		super();
+	}
+
+	public ArrayList<Ejercicio> getNameExercisesbyId(String id)
+			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
+		firestore = connection.getConnection();
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
-		try {
-			InputStream fileInputStream = getClass().getResourceAsStream("/utils/gymapp.json");
 
-			FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
-					.setProjectId("gymapp-4565e").setCredentials(GoogleCredentials.fromStream(fileInputStream)).build();
-			Firestore firestore = firestoreOptions.getService();
+		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
+		DocumentReference workout = workouts.document(id);
 
-			CollectionReference workouts = firestore.collection("Workouts");
-			DocumentReference workout = workouts.document(id);
-			ApiFuture<QuerySnapshot> query = workout.collection("Exercises").get();
-			QuerySnapshot querySnapshot = query.get();
-			List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).get();
+		QuerySnapshot querySnapshot = query.get();
 
-			for (QueryDocumentSnapshot exe : exercises) {
-				Ejercicio exercise = new Ejercicio();
-				exercise.setName(exe.getString("name"));
-				System.out.print(exercise.getName());
-				ret.add(exercise);
-
-			}
-
-		} catch (Exception e) {
-
+		List<QueryDocumentSnapshot> exercises = querySnapshot.getDocuments();
+		for (QueryDocumentSnapshot exe : exercises) {
+			Ejercicio exercise = new Ejercicio();
+			exercise.setName(exe.getString(KEY_NAME));
+			ret.add(exercise);
 		}
+		firestore.close();
+
 		return ret;
 	}
 }

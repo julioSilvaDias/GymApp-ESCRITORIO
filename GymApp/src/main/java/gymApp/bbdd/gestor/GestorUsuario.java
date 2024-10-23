@@ -12,30 +12,32 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import gymApp.bbdd.Connection;
 
 import gymApp.bbdd.pojos.Usuario;
 
-public class GestorUsuario {
+public class GestorUsuario extends GestorAbstract{
 	
-	public Usuario obtenerUserAndPassword(String login, String password) throws InterruptedException, ExecutionException, IOException {
-		
+	private Firestore db = null;
+
+	public GestorUsuario() {
+		super();
+
+	}
+	
+	public Usuario obtenerUserAndPassword(String login, String password) throws InterruptedException, ExecutionException, IOException, Exception {
+		db = connection.getConnection();
 		Usuario usuario = new Usuario();
 		
-		InputStream serviceAccount = getClass().getResourceAsStream("/utils/gymapp.json");
-		
-		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("gymapp-4565e").setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-		
-		Firestore db = firestoreOptions.getService();
-		
-		ApiFuture<QuerySnapshot> query = db.collection("Users").whereEqualTo("name", login).whereEqualTo("password", password).get();
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).whereEqualTo(KEY_NAME, login).whereEqualTo(KEY_PASSWORD, password).get();
 		QuerySnapshot querySnapshot = query.get();
 		List <QueryDocumentSnapshot> users = querySnapshot.getDocuments();
 		for(QueryDocumentSnapshot user : users) {
-			System.out.println("usuario: " + user.getString(login));
-			System.out.println("password: " + user.getString(login));
-			usuario.setName(user.getString("name"));
-			usuario.setPassword(user.getString("password"));
+			usuario.setName(user.getString(KEY_NAME));
+			usuario.setPassword(user.getString(KEY_PASSWORD));
 		}
+		
+		db.close();
 		
 	return usuario;
 	}
