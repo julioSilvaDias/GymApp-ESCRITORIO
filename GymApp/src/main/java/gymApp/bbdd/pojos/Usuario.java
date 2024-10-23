@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Usuario {
 
-	int id;
+	String id;
 	String name;
 	String password;
 	String surname;
@@ -12,11 +12,11 @@ public class Usuario {
 	String brithdate;
 	
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
