@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import gymApp.bbdd.gestor.GestorUsuario;
 import gymApp.bbdd.pojos.Usuario;
 import gymApp.logica.ControladorPerfil;
 
@@ -19,12 +19,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class PanelPerfil {
-	private JPanel panel = null;
-	public JTextField textFieldName;
-	private JTextField textFieldSurname;
-	private JTextField textFieldBirthdate;
-	private JTextField textFieldPassword;
-	private JTextField textFieldEmail;
+	public JPanel panel = null;
+	public static JTextField textFieldName;
+	private static JTextField textFieldSurname;
+	private static JTextField textFieldBirthdate;
+	private static JTextField textFieldPassword;
+	private static JTextField textFieldEmail;
 
 	public PanelPerfil(ArrayList<JPanel> paneles) {
 		panel = new JPanel();
@@ -137,11 +137,25 @@ public class PanelPerfil {
 		panel.add(fondo);
 	}
 
-	public void loadUserData() {
-		GestorUsuario gestorUsuario = new GestorUsuario();
-		Usuario user = new Usuario();
-		gestorUsuario.getAllData(textFieldName.setText(user.getName()), textFieldSurname.setText(user.getSurname()), textFieldBirthdate.setText(user.getBrithdate()), textFieldEmail.setText(user.getEmail()), textFieldPassword.setText(user.getPassword()));
-		textFieldName.setText(user.getName);
+	public static void loadUserData(String login) {
+		ControladorPerfil controladorPerfil = new ControladorPerfil();
+		Usuario user;
+		
+		try {
+			user = controladorPerfil.manageUserData(login);
+			
+			if (user != null) {
+				textFieldName.setText(user.getName());
+				textFieldSurname.setText(user.getSurname());
+				textFieldBirthdate.setText(user.getBrithdate());
+				textFieldEmail.setText(user.getEmail());
+				textFieldPassword.setText(user.getPassword());
+			} else {
+				JOptionPane.showMessageDialog(null, "User not found");
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error loading data into Profile");
+		}
 	}
 	
 	public JPanel getPanel() {

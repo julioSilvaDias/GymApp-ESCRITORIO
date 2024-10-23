@@ -5,21 +5,10 @@ import gymApp.bbdd.pojos.Usuario;
 
 public class ControladorPerfil {
 
-	public String manageUserData(String name, String surname, String birthdate, String email, String password) throws Exception {
-		
+	public Usuario manageUserData(String login) throws Exception {
 		GestorUsuario gestorUsuario = new GestorUsuario();
-		
-		Usuario user = gestorUsuario.getAllData(name, surname, birthdate, email, password);
-		
-		String ret = "";
-		
-		boolean userLoged = true;
-		
-		if (userLoged) {
-			
-		}
-		
-		return ret;
+		Usuario user = gestorUsuario.getLoginData(login);
+		return user;
 	}
 	
 }
