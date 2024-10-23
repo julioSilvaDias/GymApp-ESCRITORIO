@@ -86,12 +86,12 @@ public class PanelEjercicio {
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				paneles.get(0).setVisible(false);
-//				paneles.get(1).setVisible(false);
-//				paneles.get(2).setVisible(true);
-//				paneles.get(3).setVisible(false);
-//				paneles.get(4).setVisible(false);
-//				paneles.get(5).setVisible(false);
+				paneles.get(0).setVisible(false);
+				paneles.get(1).setVisible(false);
+				paneles.get(2).setVisible(true);
+				paneles.get(3).setVisible(false);
+				paneles.get(4).setVisible(false);
+				paneles.get(5).setVisible(false);
 			}
 		});
 		btnExit.setForeground(new Color(255, 255, 255));
