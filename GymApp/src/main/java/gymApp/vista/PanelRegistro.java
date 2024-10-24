@@ -96,11 +96,11 @@ public class PanelRegistro {
 		textFieldPass.setBounds(800, 592, 204, 29);
 		panel.add(textFieldPass);
 
-		textFieldName.getDocument().addDocumentListener(validar());
-		textFieldSurname.getDocument().addDocumentListener(validar());
-		textFieldEmail.getDocument().addDocumentListener(validar());
-		textFieldBirthdate.getDocument().addDocumentListener(validar());
-		textFieldPass.getDocument().addDocumentListener(validar());
+		textFieldName.getDocument().addDocumentListener(validate());
+		textFieldSurname.getDocument().addDocumentListener(validate());
+		textFieldEmail.getDocument().addDocumentListener(validate());
+		textFieldBirthdate.getDocument().addDocumentListener(validate());
+		textFieldPass.getDocument().addDocumentListener(validate());
 
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -122,7 +122,8 @@ public class PanelRegistro {
 				try {
 					new ControladorRegistro().addUser(textFieldName.getText(), textFieldSurname.getText(),
 							textFieldEmail.getText(), textFieldBirthdate.getText(), textFieldPass.getText());
-					JOptionPane.showMessageDialog(null, "Te has registrado!", "Mensaje",
+					
+					JOptionPane.showMessageDialog(null, "You have registered!", "Mensaje",
 							JOptionPane.INFORMATION_MESSAGE);
 					paneles.get(0).setVisible(true);
 					paneles.get(1).setVisible(false);
@@ -136,7 +137,7 @@ public class PanelRegistro {
 					textFieldBirthdate.setText("");
 					textFieldPass.setText("");
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Error al registrarse", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error registering", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -149,23 +150,23 @@ public class PanelRegistro {
 		panel.add(fondo);
 	}
 	
-	private DocumentListener validar() {
+	private DocumentListener validate() {
 		return new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
-				habilitarBoton();
+				enableButton();
 			}
 
 			public void removeUpdate(DocumentEvent e) {
-				habilitarBoton();
+				enableButton();
 			}
 
 			public void changedUpdate(DocumentEvent e) {
-				habilitarBoton();
+				enableButton();
 			}
 		};
 	}
 
-	protected void habilitarBoton() {
+	protected void enableButton() {
 		boolean habilitar = validateEmail(textFieldEmail.getText()) && validateBirthdate(textFieldBirthdate.getText());
 
 		btnRegister.setEnabled(habilitar);		

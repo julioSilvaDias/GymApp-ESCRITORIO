@@ -41,6 +41,8 @@ public class GestorUsuario extends GestorAbstract{
 	return usuario;
 	}
 	
+	
+
 	public void addUser(String name, String surname, String email, String birthdate, String password) throws Exception {
 		db = connection.getConnection();
 		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).get();
@@ -68,5 +70,4 @@ public class GestorUsuario extends GestorAbstract{
 		db.close();
 
 	}
-
 }

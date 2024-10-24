@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import gymApp.bbdd.pojos.Ejercicio;
 import gymApp.bbdd.pojos.Workout;
+import gymApp.logica.ControladorEjercicio;
 import gymApp.logica.ControladorWorkouts;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -189,10 +190,12 @@ public class PanelWorkouts {
 
 	private void showExercisesTable(String id) {
 		try {
+			ControladorEjercicio.getInstance().setId(id);
 			exercises = controladorWorkouts.getExercisesById(id);
 			model.setRowCount(0);
 
 			for (Ejercicio ejercicio : exercises) {
+				ControladorEjercicio.getInstance().setName(ejercicio.getName());
 				Object[] vector = { ejercicio.getName() };
 				model.addRow(vector);
 			}

@@ -20,10 +20,6 @@ public class GestorEjercicio extends GestorAbstract {
 
 	private Firestore firestore = null;
 
-	public GestorEjercicio() {
-		super();
-	}
-
 	public ArrayList<Ejercicio> getNameExercisesbyId(String id)
 			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
 		firestore = connection.getConnection();
@@ -45,14 +41,15 @@ public class GestorEjercicio extends GestorAbstract {
 
 		return ret;
 	}
-	public Ejercicio getInfo() throws Exception {
+
+	public Ejercicio getInfo(String id, String name) throws InterruptedException, ExecutionException, Exception {
 		firestore = connection.getConnection();
 		Ejercicio exercise = new Ejercicio();
 
 		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
-		DocumentReference workout = workouts.document("001");
+		DocumentReference workout = workouts.document(id);
 
-		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, name).get();
 		QuerySnapshot querySnapshot = query.get();
 		List<QueryDocumentSnapshot> Exercise = querySnapshot.getDocuments();
 		for (QueryDocumentSnapshot exer : Exercise) {
