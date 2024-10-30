@@ -11,4 +11,9 @@ public class ControladorPerfil {
 		return user;
 	}
 	
+	public void updatePasswordUser(String login, String newPassword) throws Exception {
+		GestorUsuario gestorUsuario = new GestorUsuario();
+		gestorUsuario.updatePassword(login, newPassword);
+	}
+	
 }

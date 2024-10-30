@@ -12,6 +12,7 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 
 import gymApp.bbdd.pojos.Usuario;
 
@@ -116,6 +117,27 @@ public class GestorUsuario extends GestorAbstract {
 		db.close();
 
 		return usuario;
+	}
+	
+	public void updatePassword(String login, String newPassword) throws Exception {
+		
+		db = connection.getConnection();
+		
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).whereEqualTo("name", login).get();
+		QuerySnapshot querySnapshot = query.get();
+		List<QueryDocumentSnapshot> users = querySnapshot.getDocuments();
+		
+		if (users.isEmpty()) {
+			DocumentReference userDocumentReference = users.get(0).getReference();
+			
+			Map<String, Object> updates = new HashMap<>();
+			updates.put("password", newPassword);
+			
+			ApiFuture<WriteResult> writeResult = userDocumentReference.update(updates);
+			writeResult.get();
+		}
+		
+		db.close();
 	}
 
 }

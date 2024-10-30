@@ -32,6 +32,30 @@ public class PanelPerfil {
 		panel.setLayout(null);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String login = textFieldName.getText();
+				String newPassword = textFieldPassword.getText();
+				
+				ControladorPerfil controladorPerfil = new ControladorPerfil();
+				
+				if (newPassword.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Password cannot be empty");
+				}
+				
+				try {
+					controladorPerfil.updatePasswordUser(login, newPassword);
+					textFieldPassword.setText(newPassword);
+					JOptionPane.showMessageDialog(null, "Password update successfully");
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Error updating password");
+				}
+
+			}
+		});
+
 		btnSave.setFont(new Font("Corbel", Font.BOLD, 40));
 		btnSave.setBackground(new Color(113, 105, 105));
 		btnSave.setForeground(new Color(251, 251, 251));
@@ -55,6 +79,7 @@ public class PanelPerfil {
 		panel.add(btnHome);
 
 		textFieldEmail = new JTextField();
+		textFieldEmail.setEditable(false);
 		textFieldEmail.setFont(new Font("Corbel", Font.PLAIN, 30));
 		textFieldEmail.setForeground(Color.WHITE);
 		textFieldEmail.setBackground(new Color(113, 105, 105));
@@ -71,6 +96,7 @@ public class PanelPerfil {
 		textFieldPassword.setColumns(10);
 
 		textFieldBirthdate = new JTextField();
+		textFieldBirthdate.setEditable(false);
 		textFieldBirthdate.setFont(new Font("Corbel", Font.PLAIN, 30));
 		textFieldBirthdate.setForeground(Color.WHITE);
 		textFieldBirthdate.setBackground(new Color(113, 105, 105));
@@ -79,6 +105,7 @@ public class PanelPerfil {
 		textFieldBirthdate.setColumns(10);
 
 		textFieldSurname = new JTextField();
+		textFieldSurname.setEditable(false);
 		textFieldSurname.setFont(new Font("Corbel", Font.PLAIN, 30));
 		textFieldSurname.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldSurname.setForeground(Color.WHITE);
@@ -88,6 +115,7 @@ public class PanelPerfil {
 		textFieldSurname.setColumns(10);
 
 		textFieldName = new JTextField();
+		textFieldName.setEditable(false);
 		textFieldName.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldName.setFont(new Font("Corbel", Font.PLAIN, 30));
 		textFieldName.setForeground(Color.WHITE);
