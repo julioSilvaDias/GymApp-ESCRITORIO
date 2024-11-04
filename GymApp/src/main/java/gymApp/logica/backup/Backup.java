@@ -7,66 +7,105 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import gymApp.bbdd.pojos.Ejercicio;
+import gymApp.bbdd.pojos.History;
 import gymApp.bbdd.pojos.Usuario;
 import gymApp.bbdd.pojos.Workout;
 
 public class Backup {
-	private static final String RUTA = "/ficheros/backup.dat";
-	private static final File FILE = new File(RUTA);
-
+	private static final String RUTA_USERS = "ficheros/backupUsers.dat";
+	private static final File FILE_USERS = new File(RUTA_USERS);
+	private static final String RUTA_WORKOUT = "ficheros/backupWorkout.dat";
+	private static final File FILE_WORKOUT = new File(RUTA_WORKOUT);
+	private static final String RUTA_EXERCISES = "ficheros/backupExercises.dat";
+	private static final File FILE_EXERCISES = new File(RUTA_EXERCISES);
+	private static final String RUTA_XML = "ficheros/history.xml";
+	
 	public void saveUsers(ArrayList<Usuario> users) throws FileNotFoundException, IOException {
-
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE));
-
 		for (Usuario user : users) {
-			fic.writeUTF("\n" + "name: " + user.getName() + "\n");
-			fic.writeUTF("surname: " + user.getSurname() + "\n");
-			fic.writeUTF("Birthdate: " + user.getBrithdate() + "\n");
-			fic.writeUTF("email: " + user.getEmail() + "\n");
-			fic.writeUTF("password: " + user.getPassword() + "\n");
-			fic.writeUTF("id: " + user.getId() + "\n");
-			fic.writeUTF("***************************");
-
+			saveUser(user);
 		}
+	}
+
+	public void saveUser(Usuario user) throws FileNotFoundException, IOException {
+
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_USERS));
+
+		fic.writeUTF("\n" + "name: " + user.getName() + "\n");
+		fic.writeUTF("surname: " + user.getSurname() + "\n");
+		fic.writeUTF("Birthdate: " + user.getBrithdate() + "\n");
+		fic.writeUTF("email: " + user.getEmail() + "\n");
+		fic.writeUTF("password: " + user.getPassword() + "\n");
+		fic.writeUTF("id: " + user.getId() + "\n");
+		fic.writeUTF("***************************");
 
 		fic.close();
 	}
 
-	public void saveWorkout(ArrayList<Workout> workouts) throws FileNotFoundException, IOException {
-
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE));
-
+	public void saveWorkouts(ArrayList<Workout> workouts) throws FileNotFoundException, IOException {
 		for (Workout workout : workouts) {
-			fic.writeUTF("\n" + "name: " + workout.getName() + "\n");
-			fic.writeUTF("nivel: " + workout.getNivel() + "\n");
-			fic.writeUTF("video: " + workout.getVideo() + "\n");
-			fic.writeUTF("exercises: " + workout.getExercises() + "\n");
-			fic.writeUTF("id: " + workout.getId() + "\n");
-			fic.writeUTF("***************************");
-
+			saveWorkout(workout);
 		}
+	}
+
+	public void saveWorkout(Workout workout) throws FileNotFoundException, IOException {
+
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_WORKOUT));
+
+		fic.writeUTF("\n" + "name: " + workout.getName() + "\n");
+		fic.writeUTF("nivel: " + workout.getNivel() + "\n");
+		fic.writeUTF("video: " + workout.getVideo() + "\n");
+		fic.writeUTF("exercises: " + workout.getExercises() + "\n");
+		fic.writeUTF("id: " + workout.getId() + "\n");
+		fic.writeUTF("***************************");
 
 		fic.close();
 	}
 
 	public void saveExercises(ArrayList<Ejercicio> exercises) throws FileNotFoundException, IOException {
-
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE));
-
-		for (Ejercicio exercice : exercises) {
-			
-			fic.writeUTF("\n" + "name: " + exercice.getName() + "\n");
-			fic.writeUTF("image: " + exercice.getImage() + "\n");
-			fic.writeUTF("description: " + exercice.getDescription() + "\n");
-			fic.writeUTF("rest: " + exercice.getRest() + "\n");
-			fic.writeUTF("sets: " + exercice.getSets() + "\n");
-			fic.writeUTF("id: " + exercice.getId() + "\n");
-			fic.writeUTF("***************************");
-
+		for (Ejercicio exercise : exercises) {
+			saveExercise(exercise);
 		}
+	}
+
+	public void saveExercise(Ejercicio exercise) throws FileNotFoundException, IOException {
+
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_EXERCISES));
+
+		fic.writeUTF("\n" + "name: " + exercise.getName() + "\n");
+		fic.writeUTF("image: " + exercise.getImage() + "\n");
+		fic.writeUTF("description: " + exercise.getDescription() + "\n");
+		fic.writeUTF("rest: " + exercise.getRest() + "\n");
+
+		StringBuilder setsString = new StringBuilder();
+		for (Integer set : exercise.getSets()) {
+			setsString.append(set).append(",");
+		}
+
+		if (setsString.length() > 0) {
+			setsString.deleteCharAt(setsString.length() - 1);
+		}
+
+		fic.writeUTF("sets: " + setsString.toString() + "\n");
+		fic.writeUTF("id: " + exercise.getId() + "\n");
+		fic.writeUTF("***************************");
 
 		fic.close();
 	}
@@ -74,7 +113,7 @@ public class Backup {
 	public ArrayList<Usuario> getUsers() throws FileNotFoundException, IOException {
 		ArrayList<Usuario> ret = null;
 
-		FileInputStream file = new FileInputStream(FILE);
+		FileInputStream file = new FileInputStream(FILE_USERS);
 		DataInputStream fic = new DataInputStream(file);
 
 		String name = null;
@@ -145,10 +184,10 @@ public class Backup {
 		return ret;
 	}
 
-	public ArrayList<Ejercicio> getExercises() throws FileNotFoundException, IOException{
+	public ArrayList<Ejercicio> getExercises() throws FileNotFoundException, IOException {
 		ArrayList<Ejercicio> ret = null;
 
-		FileInputStream file = new FileInputStream(FILE);
+		FileInputStream file = new FileInputStream(FILE_EXERCISES);
 		DataInputStream fic = new DataInputStream(file);
 
 		String name = null;
@@ -182,9 +221,13 @@ public class Backup {
 					rest = Integer.parseInt(value);
 					break;
 
-				/*case "sets":
-					sets = value;
-					break;*/
+				case "sets":
+					sets = new ArrayList<>();
+					String[] setValues = value.split(",");
+					for (String setValue : setValues) {
+						sets.add(Integer.parseInt(setValue.trim()));
+					}
+
 				}
 			}
 
@@ -213,10 +256,10 @@ public class Backup {
 
 	}
 
-	public ArrayList<Workout> getWorkout() throws FileNotFoundException, IOException{
+	public ArrayList<Workout> getWorkout() throws FileNotFoundException, IOException {
 		ArrayList<Workout> ret = null;
 
-		FileInputStream file = new FileInputStream(FILE);
+		FileInputStream file = new FileInputStream(FILE_WORKOUT);
 		DataInputStream fic = new DataInputStream(file);
 
 		String name = null;
@@ -266,7 +309,7 @@ public class Backup {
 				workout.setVideo(video);
 
 				ret.add(workout);
-				
+
 				name = null;
 				nivel = 0;
 				video = null;
@@ -276,8 +319,92 @@ public class Backup {
 			}
 
 		}
-		
+
 		fic.close();
 		return ret;
 	}
+
+	public static boolean isConnectionAvailable() {
+		boolean ret = false;
+		try {
+			InetAddress address = InetAddress.getByName("www.google.com");
+			ret = true;
+		} catch (Exception e) {
+			ret = false;
+		}
+
+		return ret;
+	}
+
+	public void saveHistories(ArrayList<History> histories)
+			throws ParserConfigurationException, SAXException, IOException, TransformerException {
+		for (History history : histories) {
+			saveHistory(history);
+		}
+	}
+
+	public void saveHistory(History history)
+			throws ParserConfigurationException, SAXException, IOException, TransformerException {
+		
+		   File fileHistory = new File(RUTA_XML);
+
+		    if (!fileHistory.exists()) {
+		        fileHistory.createNewFile();
+
+		        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		        Document doc = dBuilder.newDocument();
+		        Element rootElement = doc.createElement("Histories");
+		        doc.appendChild(rootElement);
+
+		        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		        Transformer transformer = transformerFactory.newTransformer();
+		        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		        DOMSource source = new DOMSource(doc);
+		        StreamResult result = new StreamResult(fileHistory);
+		        transformer.transform(source, result);
+		    }
+
+		    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		    Document doc = dBuilder.parse(fileHistory);
+		    doc.getDocumentElement().normalize();
+
+		    Element historyElement = doc.createElement("History");
+
+		    Element completedExercises = doc.createElement("CompleteExercises");
+		    completedExercises.appendChild(doc.createTextNode(history.getCompletedExercises()));
+		    historyElement.appendChild(completedExercises);
+
+		    Element expectedTime = doc.createElement("ExpectedTime");
+		    expectedTime.appendChild(doc.createTextNode(history.getExpectedTime()));
+		    historyElement.appendChild(expectedTime);
+
+		    Element id = doc.createElement("Id");
+		    id.appendChild(doc.createTextNode(history.getId()));
+		    historyElement.appendChild(id);
+
+		    Element nameWorkout = doc.createElement("NameWorkout");
+		    nameWorkout.appendChild(doc.createTextNode(history.getNameWorkour()));
+		    historyElement.appendChild(nameWorkout);
+
+		    Element totalTime = doc.createElement("TotalTime");
+		    totalTime.appendChild(doc.createTextNode(history.getTotalTime()));
+		    historyElement.appendChild(totalTime);
+
+		    Element date = doc.createElement("Date");
+		    date.appendChild(doc.createTextNode(history.getDate().toString()));
+		    historyElement.appendChild(date);
+
+		    doc.getDocumentElement().appendChild(historyElement);
+
+		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		    DOMSource source = new DOMSource(doc);
+		    StreamResult result = new StreamResult(fileHistory);
+		    transformer.transform(source, result);
+
+	}
+
 }

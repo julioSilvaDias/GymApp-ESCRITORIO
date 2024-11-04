@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Histories>
+                
+    
+    
+    <History>
+                                
+        
+        
+        <CompleteExercises>100%</CompleteExercises>
+                                
+        
+        
+        <ExpectedTime>30:00</ExpectedTime>
+                                
+        
+        
+        <Id/>
+                                
+        
+        
+        <NameWorkout>Workout A</NameWorkout>
+                                
+        
+        
+        <TotalTime>30:00</TotalTime>
+                                
+        
+        
+        <Date>Mon Oct 21 00:00:00 CEST 2024</Date>
+                            
+    
+    
+    </History>
+            
+    
+    
+    <History>
+                        
+        
+        <CompleteExercises>100%</CompleteExercises>
+                        
+        
+        <ExpectedTime>30:00</ExpectedTime>
+                        
+        
+        <Id/>
+                        
+        
+        <NameWorkout>Workout A</NameWorkout>
+                        
+        
+        <TotalTime>30:00</TotalTime>
+                        
+        
+        <Date>Tue Sep 10 00:00:00 CEST 2024</Date>
+                    
+    
+    </History>
+        
+    
+    <History>
+                
+        <CompleteExercises>100%</CompleteExercises>
+                
+        <ExpectedTime>30:00</ExpectedTime>
+                
+        <Id/>
+                
+        <NameWorkout>Workout A</NameWorkout>
+                
+        <TotalTime>30:00</TotalTime>
+                
+        <Date>Mon Oct 21 00:00:00 CEST 2024</Date>
+            
+    </History>
+    
+    <History>
+        <CompleteExercises>100%</CompleteExercises>
+        <ExpectedTime>30:00</ExpectedTime>
+        <Id/>
+        <NameWorkout>Workout A</NameWorkout>
+        <TotalTime>30:00</TotalTime>
+        <Date>Tue Sep 10 00:00:00 CEST 2024</Date>
+    </History>
+</Histories>
