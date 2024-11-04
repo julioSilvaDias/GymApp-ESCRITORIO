@@ -10,8 +10,12 @@ import gymApp.bbdd.pojos.History;
 import gymApp.logica.backup.Backup;
 
 public class ControladorHistorico {
-	public ArrayList<History> getHistoryList(String id)
+	
+	
+	public ArrayList<History> getHistoryList()
 			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
+		
+		String id = ControllerInstance.getInstance().getIdUser();
 		
 		ArrayList<History> ret = new ArrayList<History>();
 		GestorHistorico gestorHistorico = new GestorHistorico();

@@ -37,7 +37,7 @@ public class Backup {
 	private static final String RUTA_EXERCISES = "ficheros/backupExercises.dat";
 	private static final File FILE_EXERCISES = new File(RUTA_EXERCISES);
 	private static final String RUTA_XML = "ficheros/history.xml";
-	
+
 	public void saveUsers(ArrayList<Usuario> users) throws FileNotFoundException, IOException {
 		for (Usuario user : users) {
 			saveUser(user);
@@ -345,66 +345,59 @@ public class Backup {
 
 	public void saveHistory(History history)
 			throws ParserConfigurationException, SAXException, IOException, TransformerException {
+
+		File fileHistory = new File(RUTA_XML);
+
+		if (!fileHistory.exists()) {
+			fileHistory.createNewFile();
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.newDocument();
+			Element rootElement = doc.createElement("Histories");
+			doc.appendChild(rootElement);
+		}
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fileHistory);
+		doc.getDocumentElement().normalize();
+
+		Element historyElement = doc.createElement("History");
+
+		Element completedExercises = doc.createElement("CompleteExercises");
+		completedExercises.appendChild(doc.createTextNode(history.getCompletedExercises()));
+		historyElement.appendChild(completedExercises);
+
+		Element expectedTime = doc.createElement("ExpectedTime");
+		expectedTime.appendChild(doc.createTextNode(history.getExpectedTime()));
+		historyElement.appendChild(expectedTime);
+
+		Element id = doc.createElement("Id");
+		id.appendChild(doc.createTextNode(history.getId()));
+		historyElement.appendChild(id);
+
+		Element nameWorkout = doc.createElement("NameWorkout");
+		nameWorkout.appendChild(doc.createTextNode(history.getNameWorkour()));
+		historyElement.appendChild(nameWorkout);
+
+		Element totalTime = doc.createElement("TotalTime");
+		totalTime.appendChild(doc.createTextNode(history.getTotalTime()));
+		historyElement.appendChild(totalTime);
+
+		Element date = doc.createElement("Date");
+		date.appendChild(doc.createTextNode(history.getDate().toString()));
+		historyElement.appendChild(date);
+
+		doc.getDocumentElement().appendChild(historyElement);
 		
-		   File fileHistory = new File(RUTA_XML);
-
-		    if (!fileHistory.exists()) {
-		        fileHistory.createNewFile();
-
-		        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		        Document doc = dBuilder.newDocument();
-		        Element rootElement = doc.createElement("Histories");
-		        doc.appendChild(rootElement);
-
-		        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		        Transformer transformer = transformerFactory.newTransformer();
-		        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		        DOMSource source = new DOMSource(doc);
-		        StreamResult result = new StreamResult(fileHistory);
-		        transformer.transform(source, result);
-		    }
-
-		    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		    Document doc = dBuilder.parse(fileHistory);
-		    doc.getDocumentElement().normalize();
-
-		    Element historyElement = doc.createElement("History");
-
-		    Element completedExercises = doc.createElement("CompleteExercises");
-		    completedExercises.appendChild(doc.createTextNode(history.getCompletedExercises()));
-		    historyElement.appendChild(completedExercises);
-
-		    Element expectedTime = doc.createElement("ExpectedTime");
-		    expectedTime.appendChild(doc.createTextNode(history.getExpectedTime()));
-		    historyElement.appendChild(expectedTime);
-
-		    Element id = doc.createElement("Id");
-		    id.appendChild(doc.createTextNode(history.getId()));
-		    historyElement.appendChild(id);
-
-		    Element nameWorkout = doc.createElement("NameWorkout");
-		    nameWorkout.appendChild(doc.createTextNode(history.getNameWorkour()));
-		    historyElement.appendChild(nameWorkout);
-
-		    Element totalTime = doc.createElement("TotalTime");
-		    totalTime.appendChild(doc.createTextNode(history.getTotalTime()));
-		    historyElement.appendChild(totalTime);
-
-		    Element date = doc.createElement("Date");
-		    date.appendChild(doc.createTextNode(history.getDate().toString()));
-		    historyElement.appendChild(date);
-
-		    doc.getDocumentElement().appendChild(historyElement);
-
-		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    Transformer transformer = transformerFactory.newTransformer();
-		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		    DOMSource source = new DOMSource(doc);
-		    StreamResult result = new StreamResult(fileHistory);
-		    transformer.transform(source, result);
-
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(fileHistory);
+		transformer.transform(source, result);
 	}
+
 
 }

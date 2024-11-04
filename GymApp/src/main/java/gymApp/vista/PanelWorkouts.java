@@ -44,8 +44,10 @@ public class PanelWorkouts {
 	private Object[][] data;
 	private DefaultTableModel model = new DefaultTableModel(data, columns);
 	private ArrayList<Ejercicio> exercises;
+	private PanelHistorico panelHistorico;
 
-	public PanelWorkouts(ArrayList<JPanel> paneles) {
+	public PanelWorkouts(ArrayList<JPanel> paneles, PanelHistorico panelHistorico) {
+		this.panelHistorico = panelHistorico;
 		try {
 			ArrayList<Workout> workouts = null;
 			panel = new JPanel();
@@ -144,12 +146,12 @@ public class PanelWorkouts {
 
 			btnHistorico.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					paneles.get(0).setVisible(false);
-					paneles.get(1).setVisible(false);
-					paneles.get(2).setVisible(false);
-					paneles.get(3).setVisible(false);
-					paneles.get(4).setVisible(false);
-					paneles.get(5).setVisible(true);
+			        for (JPanel p : paneles) {
+			            p.setVisible(false);
+			        }
+
+			        paneles.get(5).setVisible(true);
+			        panelHistorico.refreshHistoric();
 				}
 			});
 

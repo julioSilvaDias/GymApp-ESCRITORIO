@@ -10,16 +10,17 @@ import gymApp.logica.backup.Backup;
 
 public class ControladorLogin {
 	private Backup backup = new Backup();
-	
+
 	public String checkLogin(String login, String password)
 			throws InterruptedException, ExecutionException, IOException, Exception {
 		boolean connection = backup.isConnectionAvailable();
 		String ret = "";
+		Usuario user = new Usuario();
 
 		if (connection) {
 			GestorUsuario gestorUsuario = new GestorUsuario();
 
-			Usuario user = gestorUsuario.obtenerUserAndPassword(login, password);
+			user = gestorUsuario.obtenerUserAndPassword(login, password);
 
 			if (null == user || null == user.getName()) {
 				ret = "User does not exist";
@@ -33,34 +34,36 @@ public class ControladorLogin {
 				new Backup().saveUser(user);
 
 			}
-		}else{
+		} else {
 			ret = getLocalUser(login, password);
 		}
+		
+		ControllerInstance.getInstance().setIdUser(user.getId());
 
 		return ret;
 
 	}
-	
+
 	private String getLocalUser(String login, String password) throws FileNotFoundException, IOException {
-		String ret="";
+		String ret = "";
 		ArrayList<Usuario> users = new ArrayList<Usuario>();
 		users = backup.getUsers();
 		boolean isUser = false;
-		
-		for(Usuario user : users) {
-			if(user.getName().equals(login) && user.getPassword().equals(password)) {
+
+		for (Usuario user : users) {
+			if (user.getName().equals(login) && user.getPassword().equals(password)) {
 				isUser = true;
 			}
 		}
-		
-		if(isUser) {
+
+		if (isUser) {
 			ret = "Correct Login. Local user found";
-		}else {
+		} else {
 			ret = "No Internet connection. No local user found";
 		}
-		
+
 		return ret;
-		
+
 	}
 
 }
