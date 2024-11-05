@@ -26,14 +26,12 @@ public class ControladorLogin {
 				ret = "User does not exist";
 			} else if (user.getName().equals(login) && user.getPassword().equals(password)) {
 				ret = "Correct Login";
+				new Backup().saveUser(user);
 			} else {
 				ret = "Incorrect username or password";
 			}
 
-			if (ret.equals("Correct Login")) {
-				new Backup().saveUser(user);
 
-			}
 		} else {
 			ret = getLocalUser(login, password);
 		}

@@ -62,21 +62,18 @@ public class GymApp extends JFrame {
 	    paneles.add(panel2);
 	    frame.getContentPane().add(panel2);
 
-	    // Crea la instancia de PanelHistorico
 	    PanelHistorico panelHistorico = new PanelHistorico(paneles);
 	    JPanel panel6 = panelHistorico.getPanel();
 	    panel6.setVisible(false);
 	    
-	    // Crea la instancia de PanelWorkouts y pasa PanelHistorico
 	    PanelWorkouts panelWorkout = new PanelWorkouts(paneles, panelHistorico);
 	    JPanel panel3 = panelWorkout.getPanel();
 	    panel3.setVisible(false);
 	    
-	    // Agrega todos los paneles a la lista
 	    paneles.add(panel3);
 	    frame.getContentPane().add(panel3);
 
-	    PanelEjercicio panelEjercicio = new PanelEjercicio(paneles);
+	    /*PanelEjercicio panelEjercicio = new PanelEjercicio(paneles);
 	    JPanel panel4 = panelEjercicio.getPanel();
 	    panel4.setVisible(false);
 
@@ -92,7 +89,7 @@ public class GymApp extends JFrame {
 	    
 	    // Agrega PanelHistorico al final, después de agregar los demás
 	    paneles.add(panel6);
-	    frame.getContentPane().add(panel6);
+	    frame.getContentPane().add(panel6);*/
 	}
 
 
