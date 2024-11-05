@@ -55,7 +55,7 @@ public class GymApp extends JFrame {
 	    paneles.add(panel1);
 	    frame.getContentPane().add(panel1);
 
-	    PanelRegistro panelRegistro = new PanelRegistro(paneles);
+	    /*PanelRegistro panelRegistro = new PanelRegistro(paneles);
 	    JPanel panel2 = panelRegistro.getPanel();
 	    panel2.setVisible(false);
 
@@ -92,7 +92,7 @@ public class GymApp extends JFrame {
 	    
 	    // Agrega PanelHistorico al final, después de agregar los demás
 	    paneles.add(panel6);
-	    frame.getContentPane().add(panel6);
+	    frame.getContentPane().add(panel6);*/
 	}
 
 

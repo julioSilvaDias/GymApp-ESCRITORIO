@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -111,75 +113,68 @@ public class Backup {
 	}
 
 	public ArrayList<Usuario> getUsers() throws FileNotFoundException, IOException {
-		ArrayList<Usuario> ret = null;
+		ArrayList<Usuario> ret = new ArrayList<>();
 
-		FileInputStream file = new FileInputStream(FILE_USERS);
-		DataInputStream fic = new DataInputStream(file);
+		try (FileInputStream file = new FileInputStream(FILE_USERS);
+				DataInputStream dataInput = new DataInputStream(file)) {
 
-		String name = null;
-		String surname = null;
-		String birthdate = null;
-		String email = null;
-		String password = null;
-		String id = null;
+			String name = null;
+			String surname = null;
+			String birthdate = null;
+			String email = null;
+			String password = null;
+			String id = null;
 
-		while (file.getChannel().position() < file.getChannel().size()) {
-			String line = fic.readUTF().trim();
-			String[] parts = line.split(":", 2);
+			while (dataInput.available() > 0) {
+				String line = dataInput.readUTF().trim();
+				String[] parts = line.split(":", 2);
 
-			if (parts.length == 2) {
-				String key = parts[0].trim().toLowerCase();
-				String value = parts[1].trim();
+				if (parts.length == 2) {
+					String key = parts[0].trim().toLowerCase();
+					String value = parts[1].trim();
 
-				switch (key) {
-				case "name":
-					name = value;
-					break;
+					switch (key) {
+					case "name":
+						name = value;
+						break;
+					case "surname":
+						surname = value;
+						break;
+					case "birthdate":
+						birthdate = value;
+						break;
+					case "email":
+						email = value;
+						break;
+					case "password":
+						password = value;
+						break;
+					case "id":
+						id = value;
+						break;
+					}
+				}
 
-				case "surname":
-					surname = value;
-					break;
+				if (line.contains("***************************")) {
+					Usuario user = new Usuario();
+					user.setBrithdate(birthdate);
+					user.setEmail(email);
+					user.setId(id);
+					user.setName(name);
+					user.setSurname(surname);
+					user.setPassword(password);
 
-				case "Birthdate":
-					birthdate = value;
-					break;
+					ret.add(user);
 
-				case "email":
-					email = value;
-					break;
-
-				case "password":
-					password = value;
-					break;
-
-				case "id":
-					id = value;
-					break;
+					name = null;
+					surname = null;
+					birthdate = null;
+					email = null;
+					password = null;
+					id = null;
 				}
 			}
-
-			if (line.contains("***************************")) {
-				Usuario user = new Usuario();
-
-				user.setBrithdate(birthdate);
-				user.setEmail(email);
-				user.setId(id);
-				user.setName(name);
-				user.setSurname(surname);
-				user.setPassword(password);
-
-				ret.add(user);
-
-				name = null;
-				surname = null;
-				birthdate = null;
-				email = null;
-				password = null;
-				id = null;
-			}
 		}
-
-		fic.close();
 
 		return ret;
 	}
@@ -324,16 +319,16 @@ public class Backup {
 		return ret;
 	}
 
-	public static boolean isConnectionAvailable() {
-		boolean ret = false;
+	public boolean isConnectionAvailable() {
 		try {
-			InetAddress address = InetAddress.getByName("www.google.com");
-			ret = true;
-		} catch (Exception e) {
-			ret = false;
+			URL url = new URL("http://www.google.com");
+			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+			urlConnect.setConnectTimeout(3000);
+			urlConnect.connect();
+			return true;
+		} catch (IOException e) {
+			return false;
 		}
-
-		return ret;
 	}
 
 	public void saveHistories(ArrayList<History> histories)
@@ -390,7 +385,7 @@ public class Backup {
 		historyElement.appendChild(date);
 
 		doc.getDocumentElement().appendChild(historyElement);
-		
+
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -398,6 +393,5 @@ public class Backup {
 		StreamResult result = new StreamResult(fileHistory);
 		transformer.transform(source, result);
 	}
-
 
 }

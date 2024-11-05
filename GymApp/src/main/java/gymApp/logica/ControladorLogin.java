@@ -13,46 +13,51 @@ public class ControladorLogin {
 
 	public String checkLogin(String login, String password)
 			throws InterruptedException, ExecutionException, IOException, Exception {
-		boolean connection = backup.isConnectionAvailable();
+		
+		boolean connection = false;
+		connection = backup.isConnectionAvailable();
 		String ret = "";
 		Usuario user = new Usuario();
 
 		if (connection) {
-			GestorUsuario gestorUsuario = new GestorUsuario();
+			try {
+				
+				GestorUsuario gestorUsuario = new GestorUsuario();
+				user = gestorUsuario.obtenerUserAndPassword(login, password);
 
-			user = gestorUsuario.obtenerUserAndPassword(login, password);
-
-			if (null == user || null == user.getName()) {
-				ret = "User does not exist";
-			} else if (user.getName().equals(login) && user.getPassword().equals(password)) {
-				ret = "Correct Login";
-			} else {
-				ret = "Incorrect username or password";
-			}
-
-			if (ret.equals("Correct Login")) {
-				new Backup().saveUser(user);
-
+				if (user == null || user.getName() == null) {
+					ret = "User does not exist";
+					
+				} else if (user.getName().equals(login) && user.getPassword().equals(password)) {
+					ret = "Correct Login";
+					backup.saveUser(user);
+					
+				} else {
+					ret = "Incorrect username or password";
+				}
+				
+			} catch (IOException e) {
+				ret = "Error accessing Firestore: " + e.getMessage();
 			}
 		} else {
 			ret = getLocalUser(login, password);
 		}
-		
-		ControllerInstance.getInstance().setIdUser(user.getId());
+
+		if (ret.equals("Correct Login") || ret.equals("Correct Login. Local user found")) {
+			ControllerInstance.getInstance().setIdUser(user.getId());
+		}
 
 		return ret;
-
 	}
 
 	private String getLocalUser(String login, String password) throws FileNotFoundException, IOException {
 		String ret = "";
-		ArrayList<Usuario> users = new ArrayList<Usuario>();
-		users = backup.getUsers();
+		ArrayList<Usuario> users = backup.getUsers();
 		boolean isUser = false;
-
 		for (Usuario user : users) {
 			if (user.getName().equals(login) && user.getPassword().equals(password)) {
 				isUser = true;
+				break;
 			}
 		}
 
@@ -63,7 +68,6 @@ public class ControladorLogin {
 		}
 
 		return ret;
-
 	}
 
 }
