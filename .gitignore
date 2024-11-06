@@ -1,1 +1,3 @@
 GymApp/target/
+*.class
+*.properties
