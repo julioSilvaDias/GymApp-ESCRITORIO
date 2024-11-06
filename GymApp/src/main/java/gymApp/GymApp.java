@@ -41,56 +41,54 @@ public class GymApp extends JFrame {
 	}
 
 	private void initialize() {
-	    frame = new JFrame();
-	    frame.setBounds(0, 0, 1499, 878);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+		frame = new JFrame();
+		frame.setBounds(0, 0, 1499, 878);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
 
-	    paneles = new ArrayList<JPanel>();
+		paneles = new ArrayList<JPanel>();
 
-	    PanelLogin panelLogin = new PanelLogin(paneles);
-	    JPanel panel1 = panelLogin.getPanel();
-	    panel1.setVisible(true);
+		PanelLogin panelLogin = new PanelLogin(paneles);
+		JPanel panel1 = panelLogin.getPanel();
+		panel1.setVisible(true);
 
-	    paneles.add(panel1);
-	    frame.getContentPane().add(panel1);
+		paneles.add(panel1);
+		frame.getContentPane().add(panel1);
 
-	    PanelRegistro panelRegistro = new PanelRegistro(paneles);
-	    JPanel panel2 = panelRegistro.getPanel();
-	    panel2.setVisible(false);
+		PanelRegistro panelRegistro = new PanelRegistro(paneles);
+		JPanel panel2 = panelRegistro.getPanel();
+		panel2.setVisible(false);
 
-	    paneles.add(panel2);
-	    frame.getContentPane().add(panel2);
+		paneles.add(panel2);
+		frame.getContentPane().add(panel2);
 
-	    PanelHistorico panelHistorico = new PanelHistorico(paneles);
-	    JPanel panel6 = panelHistorico.getPanel();
-	    panel6.setVisible(false);
-	    
-	    PanelWorkouts panelWorkout = new PanelWorkouts(paneles, panelHistorico);
-	    JPanel panel3 = panelWorkout.getPanel();
-	    panel3.setVisible(false);
-	    
-	    paneles.add(panel3);
-	    frame.getContentPane().add(panel3);
+		PanelHistorico panelHistorico = new PanelHistorico(paneles);
+		JPanel panel6 = panelHistorico.getPanel();
+		panel6.setVisible(false);
 
-	    /*PanelEjercicio panelEjercicio = new PanelEjercicio(paneles);
-	    JPanel panel4 = panelEjercicio.getPanel();
-	    panel4.setVisible(false);
+		PanelWorkouts panelWorkout = new PanelWorkouts(paneles, panelHistorico);
+		JPanel panel3 = panelWorkout.getPanel();
+		panel3.setVisible(false);
 
-	    paneles.add(panel4);
-	    frame.getContentPane().add(panel4);
+		paneles.add(panel3);
+		frame.getContentPane().add(panel3);
 
-	    PanelPerfil panelPerfil = new PanelPerfil(paneles);
-	    JPanel panel5 = panelPerfil.getPanel();
-	    panel5.setVisible(false);
+		PanelEjercicio panelEjercicio = new PanelEjercicio(paneles);
+		JPanel panel4 = panelEjercicio.getPanel();
+		panel4.setVisible(false);
 
-	    paneles.add(panel5);
-	    frame.getContentPane().add(panel5);
-	    
-	    // Agrega PanelHistorico al final, después de agregar los demás
-	    paneles.add(panel6);
-	    frame.getContentPane().add(panel6);*/
+		paneles.add(panel4);
+		frame.getContentPane().add(panel4);
+
+		PanelPerfil panelPerfil = new PanelPerfil(paneles);
+		JPanel panel5 = panelPerfil.getPanel();
+		panel5.setVisible(false);
+
+		paneles.add(panel5);
+		frame.getContentPane().add(panel5);
+
+		paneles.add(panel6);
+		frame.getContentPane().add(panel6);
 	}
-
 
 }

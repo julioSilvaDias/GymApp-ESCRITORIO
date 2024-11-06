@@ -84,6 +84,13 @@ public class PanelLogin {
 					paneles.get(2).setVisible(true);
 					paneles.get(3).setVisible(false);
 					paneles.get(4).setVisible(false);
+				}else if("Correct Login. Local user found".equals(check)) {
+					JOptionPane.showMessageDialog(null, "Correct Login. Local user found");
+					paneles.get(0).setVisible(false);
+					paneles.get(1).setVisible(false);
+					paneles.get(2).setVisible(true);
+					paneles.get(3).setVisible(false);
+					paneles.get(4).setVisible(false);
 				} else if ("User does not exist".equals(check)) {
 					JOptionPane.showMessageDialog(null, "Incorrect username or password");
 				} else {

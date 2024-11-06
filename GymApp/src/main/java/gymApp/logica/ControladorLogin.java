@@ -13,11 +13,14 @@ public class ControladorLogin {
 
 	public String checkLogin(String login, String password)
 			throws InterruptedException, ExecutionException, IOException, Exception {
-		boolean connection = backup.isConnectionAvailable();
+		
+		boolean connection = false;
+		connection = backup.isConnectionAvailable();
 		String ret = "";
 		Usuario user = new Usuario();
 
 		if (connection) {
+
 			GestorUsuario gestorUsuario = new GestorUsuario();
 
 			user = gestorUsuario.obtenerUserAndPassword(login, password);
@@ -30,27 +33,26 @@ public class ControladorLogin {
 			} else {
 				ret = "Incorrect username or password";
 			}
-
-
+			
 		} else {
 			ret = getLocalUser(login, password);
 		}
-		
-		ControllerInstance.getInstance().setIdUser(user.getId());
+
+		if (ret.equals("Correct Login") || ret.equals("Correct Login. Local user found")) {
+			ControllerInstance.getInstance().setIdUser(user.getId());
+		}
 
 		return ret;
-
 	}
 
 	private String getLocalUser(String login, String password) throws FileNotFoundException, IOException {
 		String ret = "";
-		ArrayList<Usuario> users = new ArrayList<Usuario>();
-		users = backup.getUsers();
+		ArrayList<Usuario> users = backup.getUsers();
 		boolean isUser = false;
-
 		for (Usuario user : users) {
 			if (user.getName().equals(login) && user.getPassword().equals(password)) {
 				isUser = true;
+				break;
 			}
 		}
 
@@ -61,7 +63,6 @@ public class ControladorLogin {
 		}
 
 		return ret;
-
 	}
 
 }

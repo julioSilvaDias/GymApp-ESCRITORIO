@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -46,7 +48,7 @@ public class Backup {
 
 	public void saveUser(Usuario user) throws FileNotFoundException, IOException {
 
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_USERS));
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_USERS, true));
 
 		fic.writeUTF("\n" + "name: " + user.getName() + "\n");
 		fic.writeUTF("surname: " + user.getSurname() + "\n");
@@ -67,7 +69,7 @@ public class Backup {
 
 	public void saveWorkout(Workout workout) throws FileNotFoundException, IOException {
 
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_WORKOUT));
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_WORKOUT, true));
 
 		fic.writeUTF("\n" + "name: " + workout.getName() + "\n");
 		fic.writeUTF("nivel: " + workout.getNivel() + "\n");
@@ -87,7 +89,7 @@ public class Backup {
 
 	public void saveExercise(Ejercicio exercise) throws FileNotFoundException, IOException {
 
-		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_EXERCISES));
+		DataOutputStream fic = new DataOutputStream(new FileOutputStream(FILE_EXERCISES, true));
 
 		fic.writeUTF("\n" + "name: " + exercise.getName() + "\n");
 		fic.writeUTF("image: " + exercise.getImage() + "\n");
@@ -111,75 +113,68 @@ public class Backup {
 	}
 
 	public ArrayList<Usuario> getUsers() throws FileNotFoundException, IOException {
-		ArrayList<Usuario> ret = null;
+		ArrayList<Usuario> ret = new ArrayList<>();
 
-		FileInputStream file = new FileInputStream(FILE_USERS);
-		DataInputStream fic = new DataInputStream(file);
+		try (FileInputStream file = new FileInputStream(FILE_USERS);
+				DataInputStream dataInput = new DataInputStream(file)) {
 
-		String name = null;
-		String surname = null;
-		String birthdate = null;
-		String email = null;
-		String password = null;
-		String id = null;
+			String name = null;
+			String surname = null;
+			String birthdate = null;
+			String email = null;
+			String password = null;
+			String id = null;
 
-		while (file.getChannel().position() < file.getChannel().size()) {
-			String line = fic.readUTF().trim();
-			String[] parts = line.split(":", 2);
+			while (dataInput.available() > 0) {
+				String line = dataInput.readUTF().trim();
+				String[] parts = line.split(":", 2);
 
-			if (parts.length == 2) {
-				String key = parts[0].trim().toLowerCase();
-				String value = parts[1].trim();
+				if (parts.length == 2) {
+					String key = parts[0].trim().toLowerCase();
+					String value = parts[1].trim();
 
-				switch (key) {
-				case "name":
-					name = value;
-					break;
+					switch (key) {
+					case "name":
+						name = value;
+						break;
+					case "surname":
+						surname = value;
+						break;
+					case "birthdate":
+						birthdate = value;
+						break;
+					case "email":
+						email = value;
+						break;
+					case "password":
+						password = value;
+						break;
+					case "id":
+						id = value;
+						break;
+					}
+				}
 
-				case "surname":
-					surname = value;
-					break;
+				if (line.contains("***************************")) {
+					Usuario user = new Usuario();
+					user.setBrithdate(birthdate);
+					user.setEmail(email);
+					user.setId(id);
+					user.setName(name);
+					user.setSurname(surname);
+					user.setPassword(password);
 
-				case "Birthdate":
-					birthdate = value;
-					break;
+					ret.add(user);
 
-				case "email":
-					email = value;
-					break;
-
-				case "password":
-					password = value;
-					break;
-
-				case "id":
-					id = value;
-					break;
+					name = null;
+					surname = null;
+					birthdate = null;
+					email = null;
+					password = null;
+					id = null;
 				}
 			}
-
-			if (line.contains("***************************")) {
-				Usuario user = new Usuario();
-
-				user.setBrithdate(birthdate);
-				user.setEmail(email);
-				user.setId(id);
-				user.setName(name);
-				user.setSurname(surname);
-				user.setPassword(password);
-
-				ret.add(user);
-
-				name = null;
-				surname = null;
-				birthdate = null;
-				email = null;
-				password = null;
-				id = null;
-			}
 		}
-
-		fic.close();
 
 		return ret;
 	}
@@ -257,7 +252,7 @@ public class Backup {
 	}
 
 	public ArrayList<Workout> getWorkout() throws FileNotFoundException, IOException {
-		ArrayList<Workout> ret = null;
+		ArrayList<Workout> ret = new ArrayList<Workout>();
 
 		FileInputStream file = new FileInputStream(FILE_WORKOUT);
 		DataInputStream fic = new DataInputStream(file);
@@ -324,16 +319,16 @@ public class Backup {
 		return ret;
 	}
 
-	public static boolean isConnectionAvailable() {
-		boolean ret = false;
+	public boolean isConnectionAvailable() {
 		try {
-			InetAddress address = InetAddress.getByName("www.google.com");
-			ret = true;
-		} catch (Exception e) {
-			ret = false;
+			URL url = new URL("http://www.google.com");
+			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+			urlConnect.setConnectTimeout(3000);
+			urlConnect.connect();
+			return true;
+		} catch (IOException e) {
+			return false;
 		}
-
-		return ret;
 	}
 
 	public void saveHistories(ArrayList<History> histories)
@@ -344,60 +339,76 @@ public class Backup {
 	}
 
 	public void saveHistory(History history)
-			throws ParserConfigurationException, SAXException, IOException, TransformerException {
+	        throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
+	    File fileHistory = new File(RUTA_XML);
+	    Document doc;
+	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+	    if (!fileHistory.exists()) {
+	        doc = dBuilder.newDocument();
+	        Element rootElement = doc.createElement("Histories");
+	        doc.appendChild(rootElement);
+	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	        Transformer transformer = transformerFactory.newTransformer();
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        DOMSource source = new DOMSource(doc);
+	        StreamResult result = new StreamResult(fileHistory);
+	        transformer.transform(source, result);
+	    }
+
+	    doc = dBuilder.parse(fileHistory);
+	    doc.getDocumentElement().normalize();
+
+	    Element historyElement = doc.createElement("History");
+
+	    Element completedExercises = doc.createElement("CompleteExercises");
+	    completedExercises.appendChild(doc.createTextNode(history.getCompletedExercises()));
+	    historyElement.appendChild(completedExercises);
+
+	    Element expectedTime = doc.createElement("ExpectedTime");
+	    expectedTime.appendChild(doc.createTextNode(history.getExpectedTime()));
+	    historyElement.appendChild(expectedTime);
+
+	    Element id = doc.createElement("Id");
+	    id.appendChild(doc.createTextNode(history.getId()));
+	    historyElement.appendChild(id);
+
+	    Element nameWorkout = doc.createElement("NameWorkout");
+	    nameWorkout.appendChild(doc.createTextNode(history.getNameWorkour()));
+	    historyElement.appendChild(nameWorkout);
+
+	    Element totalTime = doc.createElement("TotalTime");
+	    totalTime.appendChild(doc.createTextNode(history.getTotalTime()));
+	    historyElement.appendChild(totalTime);
+
+	    Element date = doc.createElement("Date");
+	    date.appendChild(doc.createTextNode(history.getDate().toString()));
+	    historyElement.appendChild(date);
+
+	    doc.getDocumentElement().appendChild(historyElement);
+
+	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    Transformer transformer = transformerFactory.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	    DOMSource source = new DOMSource(doc);
+	    StreamResult result = new StreamResult(fileHistory);
+	    transformer.transform(source, result);
+	}
+
+	
+	/*public ArrayList<History> getHistories() throws ParserConfigurationException, SAXException, IOException{
 		File fileHistory = new File(RUTA_XML);
-
-		if (!fileHistory.exists()) {
-			fileHistory.createNewFile();
-
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.newDocument();
-			Element rootElement = doc.createElement("Histories");
-			doc.appendChild(rootElement);
-		}
-
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(fileHistory);
 		doc.getDocumentElement().normalize();
-
-		Element historyElement = doc.createElement("History");
-
-		Element completedExercises = doc.createElement("CompleteExercises");
-		completedExercises.appendChild(doc.createTextNode(history.getCompletedExercises()));
-		historyElement.appendChild(completedExercises);
-
-		Element expectedTime = doc.createElement("ExpectedTime");
-		expectedTime.appendChild(doc.createTextNode(history.getExpectedTime()));
-		historyElement.appendChild(expectedTime);
-
-		Element id = doc.createElement("Id");
-		id.appendChild(doc.createTextNode(history.getId()));
-		historyElement.appendChild(id);
-
-		Element nameWorkout = doc.createElement("NameWorkout");
-		nameWorkout.appendChild(doc.createTextNode(history.getNameWorkour()));
-		historyElement.appendChild(nameWorkout);
-
-		Element totalTime = doc.createElement("TotalTime");
-		totalTime.appendChild(doc.createTextNode(history.getTotalTime()));
-		historyElement.appendChild(totalTime);
-
-		Element date = doc.createElement("Date");
-		date.appendChild(doc.createTextNode(history.getDate().toString()));
-		historyElement.appendChild(date);
-
-		doc.getDocumentElement().appendChild(historyElement);
 		
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(fileHistory);
-		transformer.transform(source, result);
-	}
-
+		NodeList nList = doc.getElementsByTagName("");
+		
+		
+		return null;
+	}*/
 
 }
