@@ -70,15 +70,16 @@ public class PanelLogin {
 
 				try {
 					check = users.checkLogin(textFieldUser.getText(), textFieldPassword.getText());
-				} catch (InterruptedException | ExecutionException | IOException  e1) {
+				} catch (InterruptedException | ExecutionException | IOException e1) {
 					JOptionPane.showMessageDialog(null, "Error al conectar a los datos del Usuario");
 
-				}catch(Exception e2) {
+				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null, "Error General");
 				}
 
 				if ("Correct Login".equals(check)) {
 					JOptionPane.showMessageDialog(null, "Correct Login");
+					PanelPerfil.loadUserData(textFieldUser.getText());
 					paneles.get(0).setVisible(false);
 					paneles.get(1).setVisible(false);
 					paneles.get(2).setVisible(true);
