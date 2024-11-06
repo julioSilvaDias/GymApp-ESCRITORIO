@@ -30,6 +30,8 @@ import gymApp.logica.ControladorEjercicio;
 import gymApp.logica.ControladorWorkouts;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -46,8 +48,9 @@ public class PanelWorkouts {
 	private DefaultTableModel model = new DefaultTableModel(data, columns);
 	private ArrayList<Ejercicio> exercises;
 
-	public PanelWorkouts(ArrayList<JPanel> paneles) {
+	public PanelWorkouts(ArrayList<JPanel> paneles, JFrame frame) {
 		try {
+			
 			ArrayList<Workout> workouts = null;
 			panel = new JPanel();
 			panel.setBounds(0, 0, 1499, 878);
@@ -71,6 +74,26 @@ public class PanelWorkouts {
 			scrollPaneWorkout.setBorder(null);
 			scrollPaneWorkout.setOpaque(false);
 			scrollPaneWorkout.getViewport().setOpaque(false);
+			
+			JButton btnNewButton = new JButton("New button");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					PanelEjercicio panelEjercicio = new PanelEjercicio(paneles, frame);
+					JPanel panel4 = panelEjercicio.getPanel();
+					panel4.setVisible(false);
+
+					paneles.add(panel4);
+					frame.getContentPane().add(panel4);
+					paneles.get(0).setVisible(false);
+					paneles.get(1).setVisible(false);
+					paneles.get(2).setVisible(false);
+					paneles.get(3).setVisible(false);
+					paneles.get(4).setVisible(false);
+					paneles.get(5).setVisible(true);
+				}
+			});
+			btnNewButton.setBounds(782, 697, 138, 31);
+			panel.add(btnNewButton);
 
 			JButton btnHistorico = new JButton("Historico");
 
@@ -88,6 +111,16 @@ public class PanelWorkouts {
 
 			tableExercises = new JTable(model);
 			scrollPaneExercises.setViewportView(tableExercises);
+			tableExercises.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int selectedRow = tableExercises.rowAtPoint(e.getPoint());
+					if (selectedRow != -1) {
+						String exerciseName = (String) tableExercises.getValueAt(selectedRow, 0);
+						ControladorEjercicio.getInstance().setName(exerciseName);
+					}
+				}
+			});
 
 			videoThumbnail = new JLabel();
 			videoThumbnail.setBounds(533, 428, 402, 300);
@@ -183,19 +216,17 @@ public class PanelWorkouts {
 				showInfoWorkout(workout);
 				showVideoWorkout(workout);
 				showExercisesTable(workout.getId());
-
+				ControladorEjercicio.getInstance().setId(workout.getId());
 			}
 		});
 	}
 
 	private void showExercisesTable(String id) {
 		try {
-			ControladorEjercicio.getInstance().setId(id);
 			exercises = controladorWorkouts.getExercisesById(id);
 			model.setRowCount(0);
 
 			for (Ejercicio ejercicio : exercises) {
-				ControladorEjercicio.getInstance().setName(ejercicio.getName());
 				Object[] vector = { ejercicio.getName() };
 				model.addRow(vector);
 			}

@@ -24,7 +24,7 @@ public class ControladorEjercicio {
 	}
 
 	public Ejercicio getInfo(String idWorkout, String nameExercise) throws InterruptedException, ExecutionException, Exception {
-		return new GestorEjercicio().getInfo(id, name);
+		return new GestorEjercicio().getInfo(idWorkout, nameExercise);
 	}
 
 	public void setId(String id) {

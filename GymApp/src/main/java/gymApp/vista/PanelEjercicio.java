@@ -15,31 +15,31 @@ import java.awt.event.ActionListener;
 import javax.swing.border.BevelBorder;
 
 import gymApp.logica.ControladorEjercicio;
+import gymApp.logica.Timekeeper;
 import gymApp.bbdd.pojos.Ejercicio;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class PanelEjercicio {
 	private JPanel panel = null;
+	private boolean stop = false;
+	private boolean pause = false;
 
-	public PanelEjercicio(ArrayList<JPanel> paneles) {
+	public PanelEjercicio(ArrayList<JPanel> paneles, JFrame frame) {
 		panel = new JPanel();
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
 
-		String id = null;
-		String name = null;
-		String nameExercise = null;
+		String idWorkout = ControladorEjercicio.getInstance().getId();
+		String nameExercise = ControladorEjercicio.getInstance().getName();
 		String descExercise = null;
 		String nameWorkout = null;
 		int rest = 0;
 
 		try {
-			if (null != ControladorEjercicio.getInstance().getId() && null != ControladorEjercicio.getInstance().getName()) {
-				id = ControladorEjercicio.getInstance().getId();
-				name = ControladorEjercicio.getInstance().getName();
-				Ejercicio exercise = ControladorEjercicio.getInstance().getInfo(id, name);
-				nameExercise = exercise.getNameExercise();
+			if (idWorkout != null && nameExercise != null) {
+				Ejercicio exercise = ControladorEjercicio.getInstance().getInfo(idWorkout, nameExercise);
 				descExercise = exercise.getDescription();
 				rest = exercise.getRest();
 				nameWorkout = exercise.getName();
@@ -52,14 +52,14 @@ public class PanelEjercicio {
 			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
-		JLabel lblTimeKeeperWorkout = new JLabel("TimeKeeper Workout: ");
+		JLabel lblTimeKeeperWorkout = new JLabel("TimeKeeper Workout: 00:00");
 		lblTimeKeeperWorkout.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
 				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		lblTimeKeeperWorkout.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblTimeKeeperWorkout.setForeground(new Color(255, 255, 255));
 		lblTimeKeeperWorkout.setBounds(10, 110, 482, 101);
 		panel.add(lblTimeKeeperWorkout);
-
+		
 		JLabel lblExercise = new JLabel(nameExercise + " - " + descExercise);
 		lblExercise.setForeground(Color.WHITE);
 		lblExercise.setFont(new Font("Corbel", Font.BOLD, 30));
@@ -76,7 +76,7 @@ public class PanelEjercicio {
 		lblWorkout.setBounds(994, 110, 482, 101);
 		panel.add(lblWorkout);
 
-		JLabel lblExerciseTime = new JLabel("Exercise Time: ");
+		JLabel lblExerciseTime = new JLabel("Exercise Time: 00:00");
 		lblExerciseTime.setForeground(Color.WHITE);
 		lblExerciseTime.setFont(new Font("Corbel", Font.BOLD, 20));
 		lblExerciseTime.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
@@ -92,9 +92,26 @@ public class PanelEjercicio {
 		lblRest.setBounds(10, 297, 250, 50);
 		panel.add(lblRest);
 
+		Timekeeper timekeeperWorkout = new Timekeeper("TimeKeeper Workout", lblTimeKeeperWorkout);
+		Timekeeper timekeeperExercise = new Timekeeper("Exercise Time", lblExerciseTime);
+		//Timekeeper timekeeperRest = new Timekeeper("Rest: ", lblRest);
+		//Timekeeper timekeeperSet = new Timekeeper("", lblTimeKeeperWorkout);
+		
 		JButton btnStart = new JButton("");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!stop) {
+					timekeeperWorkout.start();
+					timekeeperExercise.start();
+					pause = true;
+				} else if (pause){
+					timekeeperWorkout.running();
+					timekeeperExercise.running();
+					pause = false;
+				} else {
+					timekeeperWorkout.pause();
+					timekeeperExercise.pause();
+				}
 			}
 		});
 		btnStart.setBackground(new Color(0, 128, 64));
@@ -110,6 +127,8 @@ public class PanelEjercicio {
 				paneles.get(3).setVisible(false);
 				paneles.get(4).setVisible(false);
 				paneles.get(5).setVisible(false);
+				frame.remove(paneles.getLast());
+				paneles.remove(5);
 			}
 		});
 		btnExit.setForeground(new Color(255, 255, 255));
