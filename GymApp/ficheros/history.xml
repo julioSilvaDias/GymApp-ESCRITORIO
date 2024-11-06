@@ -2,18 +2,10 @@
 <Histories>
     <History>
         <CompleteExercises>100%</CompleteExercises>
-        <ExpectedTime>30:00</ExpectedTime>
+        <ExpectedTime>45:00</ExpectedTime>
         <Id>001</Id>
         <NameWorkout>Workout A</NameWorkout>
         <TotalTime>30:00</TotalTime>
-        <Date>Mon Oct 21 00:00:00 CEST 2024</Date>
-    </History>
-    <History>
-        <CompleteExercises>100%</CompleteExercises>
-        <ExpectedTime>30:00</ExpectedTime>
-        <Id>002</Id>
-        <NameWorkout>Workout A</NameWorkout>
-        <TotalTime>30:00</TotalTime>
-        <Date>Tue Sep 10 00:00:00 CEST 2024</Date>
+        <Date>Mon Oct 21 10:23:56 CEST 2024</Date>
     </History>
 </Histories>
