@@ -37,8 +37,11 @@ public class GestorUsuario extends GestorAbstract {
 		List<QueryDocumentSnapshot> users = querySnapshot.getDocuments();
 
 		for (QueryDocumentSnapshot user : users) {
-			usuario.setName(user.getString(KEY_NAME));
-			usuario.setPassword(user.getString(KEY_PASSWORD));
+			usuario.setName(user.getString("name"));
+			usuario.setSurname(user.getString("surname"));
+			usuario.setBrithdate(user.getString("birthdate"));
+			usuario.setEmail(user.getString("email"));
+			usuario.setPassword(user.getString("password"));
 			usuario.setId(user.getId());
 		}
 

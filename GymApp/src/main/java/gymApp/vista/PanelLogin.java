@@ -87,6 +87,7 @@ public class PanelLogin {
 					paneles.get(4).setVisible(false);
 				}else if("Correct Login. Local user found".equals(check)) {
 					JOptionPane.showMessageDialog(null, "Correct Login. Local user found");
+					PanelPerfil.loadUserData(textFieldUser.getText());
 					paneles.get(0).setVisible(false);
 					paneles.get(1).setVisible(false);
 					paneles.get(2).setVisible(true);
