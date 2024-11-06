@@ -19,10 +19,18 @@ public class ControladorHistorico {
 		
 		ArrayList<History> ret = new ArrayList<History>();
 		GestorHistorico gestorHistorico = new GestorHistorico();
-		ret = gestorHistorico.getHistory(id);
-		
+	
 		Backup backup = new Backup();
-		backup.saveHistories(ret);
+		boolean conection = backup.isConnectionAvailable();
+		
+		if(conection) {
+			ret = gestorHistorico.getHistory(id);
+			backup.saveHistories(ret);
+		}else {
+			ret = backup.getHistories();
+		}
+		
+		
 		
 		return ret;
 	}

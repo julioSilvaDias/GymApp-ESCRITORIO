@@ -25,7 +25,7 @@ public class PanelEjercicio {
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
 		
-		String nameExercise = null;
+		/*String nameExercise = null;
 		String descExercise = null;
 		String nameWorkout = null;
 		int rest = 0;
@@ -105,7 +105,7 @@ public class PanelEjercicio {
 		fondo.setBackground(new Color(240, 240, 240));
 		fondo.setIcon(new ImageIcon(PanelEjercicio.class.getResource("/images/EJERCICIO.png")));
 		fondo.setBounds(10, 0, 1489, 867);
-		panel.add(fondo);
+		panel.add(fondo);*/
 	}
 	
 	public JPanel getPanel() {

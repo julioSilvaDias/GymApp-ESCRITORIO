@@ -37,6 +37,7 @@ public class GestorHistorico extends GestorAbstract {
 		List<QueryDocumentSnapshot> histories = querySnapshot.getDocuments();
 		for (QueryDocumentSnapshot his : histories) {
 			History history = new History();
+			history.setId(his.getId());
 			history.setCompletedExercises(his.getString(KEY_COMPLETEDEXERCISES));
 			history.setExpectedTime(his.getString(KEY_EXPECTEDTIME));
 			history.setNameWorkour(his.getString(KEY_NAMEWOKOUT));
