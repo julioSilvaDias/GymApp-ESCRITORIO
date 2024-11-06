@@ -8,7 +8,6 @@ import gymApp.bbdd.pojos.Ejercicio;
 public class ControladorEjercicio {
 	
 	private String id = null;
-	private String name = null;
 	
 	private static ControladorEjercicio controller = null;
 	
@@ -31,16 +30,8 @@ public class ControladorEjercicio {
 		this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 }

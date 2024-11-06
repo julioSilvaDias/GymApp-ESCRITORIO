@@ -25,32 +25,15 @@ public class PanelEjercicio {
 	private JPanel panel = null;
 	private boolean stop = false;
 	private boolean pause = false;
+	private JLabel lblExercise;
+	private JLabel lblWorkout;
+	private JLabel lblExerciseTime;
+	private JLabel lblRest;
 
-	public PanelEjercicio(ArrayList<JPanel> paneles, JFrame frame) {
+	public PanelEjercicio(ArrayList<JPanel> paneles) {
 		panel = new JPanel();
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
-
-		String idWorkout = ControladorEjercicio.getInstance().getId();
-		String nameExercise = ControladorEjercicio.getInstance().getName();
-		String descExercise = null;
-		String nameWorkout = null;
-		int rest = 0;
-
-		try {
-			if (idWorkout != null && nameExercise != null) {
-				Ejercicio exercise = ControladorEjercicio.getInstance().getInfo(idWorkout, nameExercise);
-				descExercise = exercise.getDescription();
-				rest = exercise.getRest();
-				nameWorkout = exercise.getName();
-			}
-		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
-		} catch (ExecutionException e) {
-			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
-		}
 
 		JLabel lblTimeKeeperWorkout = new JLabel("TimeKeeper Workout: 00:00");
 		lblTimeKeeperWorkout.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
@@ -60,7 +43,7 @@ public class PanelEjercicio {
 		lblTimeKeeperWorkout.setBounds(10, 110, 482, 101);
 		panel.add(lblTimeKeeperWorkout);
 		
-		JLabel lblExercise = new JLabel(nameExercise + " - " + descExercise);
+		lblExercise = new JLabel();
 		lblExercise.setForeground(Color.WHITE);
 		lblExercise.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblExercise.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255),
@@ -68,7 +51,7 @@ public class PanelEjercicio {
 		lblExercise.setBounds(502, 110, 482, 101);
 		panel.add(lblExercise);
 
-		JLabel lblWorkout = new JLabel(nameWorkout);
+		lblWorkout = new JLabel();
 		lblWorkout.setForeground(Color.WHITE);
 		lblWorkout.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblWorkout.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255),
@@ -76,7 +59,7 @@ public class PanelEjercicio {
 		lblWorkout.setBounds(994, 110, 482, 101);
 		panel.add(lblWorkout);
 
-		JLabel lblExerciseTime = new JLabel("Exercise Time: 00:00");
+		lblExerciseTime = new JLabel();
 		lblExerciseTime.setForeground(Color.WHITE);
 		lblExerciseTime.setFont(new Font("Corbel", Font.BOLD, 20));
 		lblExerciseTime.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
@@ -84,7 +67,7 @@ public class PanelEjercicio {
 		lblExerciseTime.setBounds(10, 236, 250, 50);
 		panel.add(lblExerciseTime);
 
-		JLabel lblRest = new JLabel("Rest: " + rest + "s");
+		lblRest = new JLabel();
 		lblRest.setForeground(Color.WHITE);
 		lblRest.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblRest.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255),
@@ -127,8 +110,6 @@ public class PanelEjercicio {
 				paneles.get(3).setVisible(false);
 				paneles.get(4).setVisible(false);
 				paneles.get(5).setVisible(false);
-				frame.remove(paneles.getLast());
-				paneles.remove(5);
 			}
 		});
 		btnExit.setForeground(new Color(255, 255, 255));
@@ -142,6 +123,29 @@ public class PanelEjercicio {
 		fondo.setIcon(new ImageIcon(PanelEjercicio.class.getResource("/images/EJERCICIO.png")));
 		fondo.setBounds(0, 0, 1499, 867);
 		panel.add(fondo);
+	}
+	
+	public void refresPanelExercise() {
+		String idWorkout = ControladorEjercicio.getInstance().getId();
+		String nameExercise = null;
+		String descExercise = null;
+		String nameWorkout = null;
+		int rest = 0;
+
+		try {
+			if (idWorkout != null) {
+				Ejercicio exercise = ControladorEjercicio.getInstance().getInfo(idWorkout);
+				descExercise = exercise.getDescription();
+				rest = exercise.getRest();
+				nameWorkout = exercise.getName();
+			}
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ExecutionException e) {
+			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public JPanel getPanel() {

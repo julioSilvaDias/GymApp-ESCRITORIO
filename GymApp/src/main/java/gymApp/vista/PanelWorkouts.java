@@ -48,7 +48,7 @@ public class PanelWorkouts {
 	private DefaultTableModel model = new DefaultTableModel(data, columns);
 	private ArrayList<Ejercicio> exercises;
 
-	public PanelWorkouts(ArrayList<JPanel> paneles, JFrame frame) {
+	public PanelWorkouts(ArrayList<JPanel> paneles, PanelEjercicio panelEjercicio) {
 		try {
 			
 			ArrayList<Workout> workouts = null;
@@ -78,18 +78,12 @@ public class PanelWorkouts {
 			JButton btnNewButton = new JButton("New button");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					PanelEjercicio panelEjercicio = new PanelEjercicio(paneles, frame);
-					JPanel panel4 = panelEjercicio.getPanel();
-					panel4.setVisible(false);
-
-					paneles.add(panel4);
-					frame.getContentPane().add(panel4);
 					paneles.get(0).setVisible(false);
 					paneles.get(1).setVisible(false);
 					paneles.get(2).setVisible(false);
 					paneles.get(3).setVisible(false);
 					paneles.get(4).setVisible(false);
-					paneles.get(5).setVisible(true);
+					paneles.get(5).setVisible(false);
 				}
 			});
 			btnNewButton.setBounds(782, 697, 138, 31);
@@ -111,16 +105,6 @@ public class PanelWorkouts {
 
 			tableExercises = new JTable(model);
 			scrollPaneExercises.setViewportView(tableExercises);
-			tableExercises.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					int selectedRow = tableExercises.rowAtPoint(e.getPoint());
-					if (selectedRow != -1) {
-						String exerciseName = (String) tableExercises.getValueAt(selectedRow, 0);
-						ControladorEjercicio.getInstance().setName(exerciseName);
-					}
-				}
-			});
 
 			videoThumbnail = new JLabel();
 			videoThumbnail.setBounds(533, 428, 402, 300);
