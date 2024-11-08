@@ -78,10 +78,11 @@ public class PanelWorkouts {
 			JButton btnNewButton = new JButton("New button");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					panelEjercicio.refresPanelExercise();
 					paneles.get(0).setVisible(false);
 					paneles.get(1).setVisible(false);
 					paneles.get(2).setVisible(false);
-					paneles.get(3).setVisible(false);
+					paneles.get(3).setVisible(true);
 					paneles.get(4).setVisible(false);
 					paneles.get(5).setVisible(false);
 				}

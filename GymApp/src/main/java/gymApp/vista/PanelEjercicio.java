@@ -19,30 +19,40 @@ import gymApp.logica.Timekeeper;
 import gymApp.bbdd.pojos.Ejercicio;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 
 public class PanelEjercicio {
 	private JPanel panel = null;
-	private boolean stop = false;
-	private boolean pause = false;
-	private JLabel lblExercise;
-	private JLabel lblWorkout;
-	private JLabel lblExerciseTime;
-	private JLabel lblRest;
+	private boolean workoutTimekeeper = false;
+	private boolean exerciseTimekeeper = false;
+	private JLabel lblExercise = null;
+	private JLabel lblWorkout = null;
+	private JLabel lblExerciseTime = null;
+	private JLabel lblRest = null;
+	private JLabel lblworkoutTimekeeper = null;
+	private JLabel lblExerciseSet1 = null;
+	private JLabel lblExerciseSet2 = null;
+	private JLabel lblExerciseSet3 = null;
+	private String nameExercise = null;
+	private String descExercise = null;
+	private String nameWorkout = null;
+	private int rest = 0;
+	private Timekeeper timekeeperWorkout = null;
+	private Timekeeper timekeeperExercise = null;
+	private Timekeeper timekeeperRest = null;
 
 	public PanelEjercicio(ArrayList<JPanel> paneles) {
 		panel = new JPanel();
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
 
-		JLabel lblTimeKeeperWorkout = new JLabel("TimeKeeper Workout: 00:00");
-		lblTimeKeeperWorkout.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
+		lblworkoutTimekeeper = new JLabel("TimeKeeper Workout: 00:00");
+		lblworkoutTimekeeper.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
 				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		lblTimeKeeperWorkout.setFont(new Font("Corbel", Font.BOLD, 30));
-		lblTimeKeeperWorkout.setForeground(new Color(255, 255, 255));
-		lblTimeKeeperWorkout.setBounds(10, 110, 482, 101);
-		panel.add(lblTimeKeeperWorkout);
-		
+		lblworkoutTimekeeper.setFont(new Font("Corbel", Font.BOLD, 30));
+		lblworkoutTimekeeper.setForeground(new Color(255, 255, 255));
+		lblworkoutTimekeeper.setBounds(10, 110, 482, 101);
+		panel.add(lblworkoutTimekeeper);
+
 		lblExercise = new JLabel();
 		lblExercise.setForeground(Color.WHITE);
 		lblExercise.setFont(new Font("Corbel", Font.BOLD, 30));
@@ -59,9 +69,9 @@ public class PanelEjercicio {
 		lblWorkout.setBounds(994, 110, 482, 101);
 		panel.add(lblWorkout);
 
-		lblExerciseTime = new JLabel();
+		lblExerciseTime = new JLabel("Exercise time: 00:00");
 		lblExerciseTime.setForeground(Color.WHITE);
-		lblExerciseTime.setFont(new Font("Corbel", Font.BOLD, 20));
+		lblExerciseTime.setFont(new Font("Corbel", Font.BOLD, 25));
 		lblExerciseTime.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
 				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		lblExerciseTime.setBounds(10, 236, 250, 50);
@@ -75,29 +85,55 @@ public class PanelEjercicio {
 		lblRest.setBounds(10, 297, 250, 50);
 		panel.add(lblRest);
 
-		Timekeeper timekeeperWorkout = new Timekeeper("TimeKeeper Workout", lblTimeKeeperWorkout);
-		Timekeeper timekeeperExercise = new Timekeeper("Exercise Time", lblExerciseTime);
-		//Timekeeper timekeeperRest = new Timekeeper("Rest: ", lblRest);
-		//Timekeeper timekeeperSet = new Timekeeper("", lblTimeKeeperWorkout);
-		
-		JButton btnStart = new JButton("");
+		lblExerciseSet1 = new JLabel();
+		lblExerciseSet1.setForeground(Color.WHITE);
+		lblExerciseSet1.setFont(new Font("Corbel", Font.BOLD, 30));
+		lblExerciseSet1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
+				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		lblExerciseSet1.setBounds(502, 313, 482, 101);
+		panel.add(lblExerciseSet1);
+
+		lblExerciseSet2 = new JLabel();
+		lblExerciseSet2.setForeground(Color.WHITE);
+		lblExerciseSet2.setFont(new Font("Corbel", Font.BOLD, 30));
+		lblExerciseSet2.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
+				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		lblExerciseSet2.setBounds(502, 425, 482, 101);
+		panel.add(lblExerciseSet2);
+
+		lblExerciseSet3 = new JLabel();
+		lblExerciseSet3.setForeground(Color.WHITE);
+		lblExerciseSet3.setFont(new Font("Corbel", Font.BOLD, 30));
+		lblExerciseSet3.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
+				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		lblExerciseSet3.setBounds(502, 537, 482, 101);
+		panel.add(lblExerciseSet3);
+
+		JButton btnStart = new JButton();
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!stop) {
+				if (!workoutTimekeeper && !exerciseTimekeeper) {
+					timekeeperWorkout.startTimekeeper();
+					timekeeperExercise.startTimekeeper();
+					timekeeperRest.startTimekeeper();
 					timekeeperWorkout.start();
 					timekeeperExercise.start();
-					pause = true;
-				} else if (pause){
-					timekeeperWorkout.running();
-					timekeeperExercise.running();
-					pause = false;
+					timekeeperRest.start();
+					workoutTimekeeper = true;
+					exerciseTimekeeper = true;
+					btnStart.setBackground(new Color(255, 255, 0));
+				} else if (timekeeperWorkout.paused) {
+					timekeeperWorkout.resumeTimekeeper();
+					timekeeperExercise.resumeTimekeeper();
+					btnStart.setBackground(new Color(255, 255, 0));
 				} else {
-					timekeeperWorkout.pause();
-					timekeeperExercise.pause();
+					timekeeperWorkout.pauseTimekeeper();
+					timekeeperExercise.pauseTimekeeper();
+					btnStart.setBackground(new Color(0, 128, 0));
 				}
 			}
 		});
-		btnStart.setBackground(new Color(0, 128, 64));
+		btnStart.setBackground(new Color(0, 128, 0));
 		btnStart.setBounds(718, 765, 50, 50);
 		panel.add(btnStart);
 
@@ -124,20 +160,24 @@ public class PanelEjercicio {
 		fondo.setBounds(0, 0, 1499, 867);
 		panel.add(fondo);
 	}
-	
+
 	public void refresPanelExercise() {
 		String idWorkout = ControladorEjercicio.getInstance().getId();
-		String nameExercise = null;
-		String descExercise = null;
-		String nameWorkout = null;
-		int rest = 0;
 
 		try {
 			if (idWorkout != null) {
 				Ejercicio exercise = ControladorEjercicio.getInstance().getInfo(idWorkout);
+				nameExercise = exercise.getNameExercise();
 				descExercise = exercise.getDescription();
 				rest = exercise.getRest();
 				nameWorkout = exercise.getName();
+				lblExercise.setText(nameExercise + " - " + descExercise);
+				lblWorkout.setText(nameWorkout);
+				lblRest.setText("Rest: " + String.valueOf(rest) + "s");
+				timekeeperWorkout = new Timekeeper("TimeKeeper Workout", lblworkoutTimekeeper, false, 0);
+				timekeeperExercise = new Timekeeper("Exercise Time", lblExerciseTime, false, 0);
+				timekeeperRest = new Timekeeper("Rest: ", lblRest, true, rest);
+				// Timekeeper timekeeperSet = new Timekeeper("", lblTimeKeeperWorkout);
 			}
 		} catch (InterruptedException e) {
 			JOptionPane.showMessageDialog(null, "Error loading exercise", "Error", JOptionPane.ERROR_MESSAGE);

@@ -9,21 +9,21 @@ public class ControladorEjercicio {
 	
 	private String id = null;
 	
-	private static ControladorEjercicio controller = null;
+	private static ControladorEjercicio instance = null;
 	
 	public static ControladorEjercicio getInstance() {
-		if (null == controller) {
-			controller = new ControladorEjercicio();
+		if (null == instance) {
+			instance = new ControladorEjercicio();
 		}
-		return controller;
+		return instance;
 	}
 
-	public ControladorEjercicio() {
+	private ControladorEjercicio() {
 
 	}
 
-	public Ejercicio getInfo(String idWorkout, String nameExercise) throws InterruptedException, ExecutionException, Exception {
-		return new GestorEjercicio().getInfo(idWorkout, nameExercise);
+	public Ejercicio getInfo(String idWorkout) throws InterruptedException, ExecutionException, Exception {
+		return new GestorEjercicio().getInfo(idWorkout);
 	}
 
 	public void setId(String id) {

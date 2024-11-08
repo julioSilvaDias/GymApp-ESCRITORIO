@@ -42,14 +42,14 @@ public class GestorEjercicio extends GestorAbstract {
 		return ret;
 	}
 
-	public Ejercicio getInfo(String id, String name) throws InterruptedException, ExecutionException, Exception {
+	public Ejercicio getInfo(String id) throws InterruptedException, ExecutionException, Exception {
 		firestore = connection.getConnection();
 		Ejercicio exercise = new Ejercicio();
 
 		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
 		DocumentReference workout = workouts.document(id);
 
-		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, name).get();
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
 		QuerySnapshot querySnapshot = query.get();
 		List<QueryDocumentSnapshot> Exercise = querySnapshot.getDocuments();
 		for (QueryDocumentSnapshot exer : Exercise) {
