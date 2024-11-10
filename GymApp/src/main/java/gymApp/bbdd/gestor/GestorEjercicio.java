@@ -42,29 +42,44 @@ public class GestorEjercicio extends GestorAbstract {
 		return ret;
 	}
 
-	public Ejercicio getInfo(String id) throws InterruptedException, ExecutionException, Exception {
+	public List<Ejercicio> getInfo(String id) throws InterruptedException, ExecutionException, Exception {
 		firestore = connection.getConnection();
-		Ejercicio exercise = new Ejercicio();
+		List<Ejercicio> exercises = new ArrayList<Ejercicio>();
 
 		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
 		DocumentReference workout = workouts.document(id);
 
-		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).whereEqualTo(KEY_NAME, "Ejer1").get();
+		ApiFuture<QuerySnapshot> query = workout.collection(COLLECTION_EXERCISES).get();
 		QuerySnapshot querySnapshot = query.get();
-		List<QueryDocumentSnapshot> Exercise = querySnapshot.getDocuments();
-		for (QueryDocumentSnapshot exer : Exercise) {
+		List<QueryDocumentSnapshot> exercisesFirestore = querySnapshot.getDocuments();
+		
+		for (QueryDocumentSnapshot exer : exercisesFirestore) {
+			Ejercicio exercise = new Ejercicio();
 			exercise.setNameExercise(exer.getString(KEY_NAME));
 			exercise.setDescription(exer.getString("description"));
 			exercise.setRest(exer.getLong("rest").intValue());
+			Object setsFirestore = exer.get("sets");
+			if (setsFirestore instanceof List<?>) {
+				List<?> setsList = (List<?>) setsFirestore;
+				int[] sets = new int[setsList.size()];
+				for (int i = 0; i < setsList.size(); i++) {
+					Object set = setsList.get(i);
+					if (set instanceof Long) {
+						sets[i] = ((Long) set).intValue();
+					}
+				}
+				exercise.setSets(sets);
+			}
 			if (exer.getData().get("workout") != null) {
 				DocumentReference workoutRef = (DocumentReference) exer.getData().get("workout");
 				ApiFuture<DocumentSnapshot> queryWorkout = firestore.collection("Workouts").document(workoutRef.getId())
 						.get();
 				exercise.setName(queryWorkout.get().getString(KEY_NAME));
 			}
+			exercises.add(exercise);
 		}
 		firestore.close();
 
-		return exercise;
+		return exercises;
 	}
 }

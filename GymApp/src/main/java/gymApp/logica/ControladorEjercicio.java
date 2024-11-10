@@ -1,5 +1,6 @@
 package gymApp.logica;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import gymApp.bbdd.gestor.GestorEjercicio;
@@ -22,7 +23,7 @@ public class ControladorEjercicio {
 
 	}
 
-	public Ejercicio getInfo(String idWorkout) throws InterruptedException, ExecutionException, Exception {
+	public List<Ejercicio> getInfo(String idWorkout) throws InterruptedException, ExecutionException, Exception {
 		return new GestorEjercicio().getInfo(idWorkout);
 	}
 
@@ -33,5 +34,4 @@ public class ControladorEjercicio {
 	public String getId() {
 		return id;
 	}
-
 }

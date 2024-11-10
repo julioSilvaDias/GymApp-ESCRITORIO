@@ -4,7 +4,7 @@ import javax.swing.JLabel;
 
 public class Timekeeper extends Thread {
 	private int counter;
-	private boolean start = false;
+	public boolean start = false;
 	public volatile boolean running = false;
 	public volatile boolean paused = false;
 	private boolean isCountDown = false;
@@ -41,8 +41,6 @@ public class Timekeeper extends Thread {
 	}
 
 	public void stopTimekeeper() {
-		running = false;
-		paused = false;
 		interrupt();
 	}
 
@@ -52,12 +50,12 @@ public class Timekeeper extends Thread {
 			if (running) {
 				if (isCountDown) {
 					if (counter > 0) {
-							counter--;
+						counter--;
 					}
 				} else {
 					counter++;
 				}
-				label.setText(getName() + ": " + counter + "s");
+				label.setText(getName() + ": " + formatTime(counter));
 			}
 
 			if (isCountDown && counter <= 0) {
@@ -75,5 +73,11 @@ public class Timekeeper extends Thread {
 				start = false;
 			}
 		}
+	}
+	
+	private String formatTime(int totalSeconds) {
+	    int minutes = totalSeconds / 60;
+	    int seconds = totalSeconds % 60;
+	    return String.format("%02d:%02d", minutes, seconds);
 	}
 }
