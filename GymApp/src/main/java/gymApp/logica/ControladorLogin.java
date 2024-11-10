@@ -1,7 +1,6 @@
 package gymApp.logica;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import gymApp.bbdd.gestor.GestorUsuario;
@@ -13,7 +12,7 @@ public class ControladorLogin {
 
 	public String checkLogin(String login, String password)
 			throws InterruptedException, ExecutionException, IOException, Exception {
-		
+
 		boolean connection = false;
 		connection = backup.isConnectionAvailable();
 		String ret = "";
@@ -29,11 +28,11 @@ public class ControladorLogin {
 				ret = "User does not exist";
 			} else if (user.getName().equals(login) && user.getPassword().equals(password)) {
 				ret = "Correct Login";
-				new Backup().saveUser(user);
+				launchBackupProcess(user);
 			} else {
 				ret = "Incorrect username or password";
 			}
-			
+
 		} else {
 			ret = getLocalUser(login, password);
 		}
@@ -65,4 +64,26 @@ public class ControladorLogin {
 		return ret;
 	}
 
+	private void launchBackupProcess(Usuario user) throws IOException, InterruptedException {
+		File tempFile = File.createTempFile("userBackup", ".tmp");
+		tempFile.deleteOnExit();
+
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempFile))) {
+			oos.writeObject(user);
+		} catch (IOException e) {
+			System.err.println("Error al escribir el archivo temporal del usuario: " + e.getMessage());
+			throw e;
+		}
+
+		ProcessBuilder processBuilder = new ProcessBuilder("java", "-cp", "target/classes",
+				"gymApp.logica.backup.BackupProcess", tempFile.getAbsolutePath());
+
+		processBuilder.inheritIO();
+		Process process = processBuilder.start();
+
+		int exitCode = process.waitFor();
+		if (exitCode != 0) {
+			System.err.println("Error al ejecutar el proceso de backup. Código de salida: " + exitCode);
+		}
+	}
 }

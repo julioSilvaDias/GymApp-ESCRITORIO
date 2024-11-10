@@ -1,8 +1,11 @@
 package gymApp.bbdd.pojos;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Workout {
+public class Workout implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	String id;
 	String video;
