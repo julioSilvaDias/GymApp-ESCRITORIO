@@ -47,7 +47,15 @@ public class PanelEjercicio {
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
 
+		lblWorkoutTimekeeper = new JLabel("TimeKeeper Workout: 00:00");
+		lblWorkoutTimekeeper.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255),
+				new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		lblWorkoutTimekeeper.setFont(new Font("Corbel", Font.BOLD, 30));
+		lblWorkoutTimekeeper.setForeground(new Color(255, 255, 255));
+		lblWorkoutTimekeeper.setBounds(10, 110, 482, 101);
+		panel.add(lblWorkoutTimekeeper);
 
+		lblExercise = new JLabel();
 		lblExercise.setForeground(Color.WHITE);
 		lblExercise.setFont(new Font("Corbel", Font.BOLD, 30));
 		lblExercise.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255),
@@ -158,7 +166,6 @@ public class PanelEjercicio {
 		fondo.setIcon(new ImageIcon(PanelEjercicio.class.getResource("/images/EJERCICIO.png")));
 		fondo.setBounds(0, 0, 1499, 867);
 		panel.add(fondo);
-
 	}
 
 	public void refresPanelExercise(int numExercise) {

@@ -154,7 +154,7 @@ public class Backup {
 					break;
 
 				case "sets":
-					sets = new ArrayList<>();
+					sets = new ArrayList<Integer>();
 					String[] setValues = value.split(",");
 					for (String setValue : setValues) {
 						sets.add(Integer.parseInt(setValue.trim()));
@@ -165,12 +165,18 @@ public class Backup {
 
 			if (line.contains("***************************")) {
 				Ejercicio exercise = new Ejercicio();
-
+				
+				int[] intArray = new int[sets.size()];
+				
+				for(int i = 0; i<sets.size(); i++) {
+					intArray[i] = sets.get(i);
+				}
+				
 				exercise.setDescription(description);
 				exercise.setImage(image);
 				exercise.setName(name);
 				exercise.setRest(rest);
-				exercise.setSets(sets);
+				exercise.setSets(intArray);
 
 				ret.add(exercise);
 

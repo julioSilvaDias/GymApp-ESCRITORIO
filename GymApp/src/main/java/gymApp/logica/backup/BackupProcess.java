@@ -65,24 +65,30 @@ public class BackupProcess {
 						backupProcess.saveHistoriesToXml((ArrayList<History>) list);
 						System.out.println("Histories backed up successfully to XML.");
 					} else {
-						System.err.println("Lista de objetos no compatible.");
+						System.out.println("Lista de objetos no compatible.");
 						System.exit(1);
 					}
 				} else {
-					System.err.println("Lista vacía, no se realizó ningún backup.");
+					System.out.println("Lista vacía, no se realizó ningún backup.");
 				}
 			} else {
-				System.err.println("El archivo no contiene un objeto válido para el respaldo.");
+				System.out.println("El archivo no contiene un objeto válido para el respaldo.");
 				System.exit(1);
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			System.err.println("Error procesando el backup: " + e.getMessage());
+			System.out.println("Error procesando el backup: " + e.getMessage());
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
 
 	public void saveUsers(ArrayList<Usuario> users) throws IOException {
+
+		if (FILE_EXERCISES.exists()) {
+			new FileOutputStream(FILE_EXERCISES).close();
+			
+		}
+		
 		for (Usuario user : users) {
 			saveUser(user);
 		}
@@ -101,46 +107,52 @@ public class BackupProcess {
 	}
 
 	public void saveWorkouts(ArrayList<Workout> workouts) throws IOException {
+		if (FILE_WORKOUT.exists()) {
+			new FileOutputStream(FILE_WORKOUT).close();
+			
+		}
 		for (Workout workout : workouts) {
 			saveWorkout(workout);
 		}
 	}
 
 	public void saveWorkout(Workout workout) throws IOException {
-		try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_WORKOUT, true))) {
-			dos.writeUTF("\n" + "name: " + workout.getName() + "\n");
-			dos.writeUTF("nivel: " + workout.getNivel() + "\n");
-			dos.writeUTF("video: " + workout.getVideo() + "\n");
-			dos.writeUTF("exercises: " + workout.getExercises() + "\n");
-			dos.writeUTF("id: " + workout.getId() + "\n");
-			dos.writeUTF("***************************");
-		}
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_WORKOUT, true));
+		dos.writeUTF("\n" + "name: " + workout.getName() + "\n");
+		dos.writeUTF("nivel: " + workout.getNivel() + "\n");
+		dos.writeUTF("video: " + workout.getVideo() + "\n");
+		dos.writeUTF("exercises: " + workout.getExercises() + "\n");
+		dos.writeUTF("id: " + workout.getId() + "\n");
+		dos.writeUTF("***************************");
 	}
 
 	public void saveExercises(ArrayList<Ejercicio> exercises) throws IOException {
+		
+	    if (FILE_EXERCISES.exists()) {
+	        new FileOutputStream(FILE_EXERCISES).close();
+	    }
 		for (Ejercicio exercise : exercises) {
 			saveExercise(exercise);
 		}
 	}
 
 	public void saveExercise(Ejercicio exercise) throws IOException {
-		try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_EXERCISES, true))) {
-			dos.writeUTF("\n" + "name: " + exercise.getName() + "\n");
-			dos.writeUTF("image: " + exercise.getImage() + "\n");
-			dos.writeUTF("description: " + exercise.getDescription() + "\n");
-			dos.writeUTF("rest: " + exercise.getRest() + "\n");
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_EXERCISES, true));
+		dos.writeUTF("\n" + "name: " + exercise.getName() + "\n");
+		dos.writeUTF("image: " + exercise.getImage() + "\n");
+		dos.writeUTF("description: " + exercise.getDescription() + "\n");
+		dos.writeUTF("rest: " + exercise.getRest() + "\n");
 
-			StringBuilder setsString = new StringBuilder();
-			for (Integer set : exercise.getSets()) {
-				setsString.append(set).append(",");
-			}
-			if (setsString.length() > 0) {
-				setsString.deleteCharAt(setsString.length() - 1);
-			}
-			dos.writeUTF("sets: " + setsString.toString() + "\n");
-			dos.writeUTF("id: " + exercise.getId() + "\n");
-			dos.writeUTF("***************************");
+		StringBuilder setsString = new StringBuilder();
+		for (Integer set : exercise.getSets()) {
+			setsString.append(set).append(",");
 		}
+		if (setsString.length() > 0) {
+			setsString.deleteCharAt(setsString.length() - 1);
+		}
+		dos.writeUTF("sets: " + setsString.toString() + "\n");
+		dos.writeUTF("id: " + exercise.getId() + "\n");
+		dos.writeUTF("***************************");
 	}
 
 	public void saveHistory(Document doc, History history) {

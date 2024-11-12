@@ -27,7 +27,7 @@ public class GestorUsuario extends GestorAbstract {
 
 	public Usuario obtenerUserAndPassword(String login, String password)
 			throws InterruptedException, ExecutionException, IOException, Exception {
-		
+
 		db = connection.getConnection();
 		Usuario usuario = new Usuario();
 
@@ -48,11 +48,6 @@ public class GestorUsuario extends GestorAbstract {
 		db.close();
 		return usuario;
 	}
-<<<<<<< HEAD
-=======
-	
-	
->>>>>>> origin/jordy
 
 	public void addUser(String name, String surname, String email, String birthdate, String password) throws Exception {
 		db = connection.getConnection();
@@ -81,7 +76,6 @@ public class GestorUsuario extends GestorAbstract {
 		db.close();
 
 	}
-<<<<<<< HEAD
 
 	public Usuario getAllData(String name, String surname, String birthdate, String email, String password)
 			throws Exception {
@@ -129,29 +123,24 @@ public class GestorUsuario extends GestorAbstract {
 
 		return usuario;
 	}
-	
+
 	public void updatePassword(String login, String newPassword) throws Exception {
-		
+
 		db = connection.getConnection();
-		
+
 		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).whereEqualTo("name", login).get();
 		QuerySnapshot querySnapshot = query.get();
 		List<QueryDocumentSnapshot> users = querySnapshot.getDocuments();
-		
+
 		if (users.isEmpty()) {
 			DocumentReference userDocumentReference = users.get(0).getReference();
-			
+
 			Map<String, Object> updates = new HashMap<>();
 			updates.put("password", newPassword);
-			
+
 			ApiFuture<WriteResult> writeResult = userDocumentReference.update(updates);
 			writeResult.get();
 		}
-		
-		db.close();
-	}
 
-}
-=======
-}
->>>>>>> origin/jordy
+		db.close();
+	}}
