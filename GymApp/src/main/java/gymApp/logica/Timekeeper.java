@@ -59,6 +59,7 @@ public class Timekeeper extends Thread {
 			}
 
 			if (isCountDown && counter <= 0) {
+				start = false;
 				running = false;
 			}
 
@@ -71,6 +72,7 @@ public class Timekeeper extends Thread {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				start = false;
+				running = false;
 			}
 		}
 	}

@@ -40,7 +40,7 @@ public class PanelEjercicio {
 	private Timekeeper timekeeperSet3 = null;
 	private Timekeeper timekeeperCountDown = null;
 	private List<Ejercicio> exercises = null;
-	private int rest = 0;
+	private int currentSet = 1;
 
 	public PanelEjercicio(ArrayList<JPanel> paneles) {
 		panel = new JPanel();
@@ -120,22 +120,65 @@ public class PanelEjercicio {
 		JButton btnStart = new JButton();
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				if (!timekeeperWorkout.start && !timekeeperExercise.start) {
-					timekeeperWorkout.startTimekeeper();
-					timekeeperExercise.startTimekeeper();
-					timekeeperWorkout.start();
-					timekeeperExercise.start();
-					btnStart.setBackground(new Color(255, 255, 0));
-				} else if (timekeeperWorkout.paused) {
-					timekeeperWorkout.resumeTimekeeper();
-					timekeeperExercise.resumeTimekeeper();
-					btnStart.setBackground(new Color(255, 255, 0));
-				} else {
-					timekeeperWorkout.pauseTimekeeper();
-					timekeeperExercise.pauseTimekeeper();
-					btnStart.setBackground(new Color(0, 128, 0));
-				}
+				if (currentSet == 1 && !timekeeperSet1.start) {
+		            timekeeperSet1.startTimekeeper();
+		            timekeeperSet1.start();
+		            btnStart.setBackground(new Color(255, 255, 0)); // Cambiar color del botón a amarillo
+		            currentSet++; // Avanzar al siguiente set
+		        }
+		        // Si el segundo set no está en ejecución, comienza Set 2
+		        else if (currentSet == 2 && !timekeeperSet2.start) {
+		            timekeeperSet2.startTimekeeper();
+		            timekeeperSet2.start();
+		            btnStart.setBackground(new Color(255, 255, 0)); // Cambiar color del botón a amarillo
+		            currentSet++; // Avanzar al siguiente set
+		        }
+		        // Si el tercer set no está en ejecución, comienza Set 3
+		        else if (currentSet == 3 && !timekeeperSet3.start) {
+		            timekeeperSet3.startTimekeeper();
+		            timekeeperSet3.start();
+		            btnStart.setBackground(new Color(255, 255, 0)); // Cambiar color del botón a amarillo
+		            currentSet++; // Avanzar al siguiente set
+		        }
+		        // Si todos los sets están en ejecución y el workout está en pausa, reanudar
+		        else if (timekeeperWorkout.paused) {
+		            timekeeperWorkout.resumeTimekeeper();
+		            timekeeperExercise.resumeTimekeeper();
+		            btnStart.setBackground(new Color(255, 255, 0)); // Cambiar color del botón a amarillo
+		        }
+		        // Si ya están en ejecución, pausar todo
+		        else {
+		            timekeeperWorkout.pauseTimekeeper();
+		            timekeeperExercise.pauseTimekeeper();
+		            timekeeperSet1.pauseTimekeeper();
+		            timekeeperSet2.pauseTimekeeper();
+		            timekeeperSet3.pauseTimekeeper();
+		            btnStart.setBackground(new Color(0, 128, 0)); // Cambiar color del botón a verde
+		        }
+				
+//				if (!timekeeperWorkout.start && !timekeeperExercise.start) {
+//					timekeeperWorkout.startTimekeeper();
+//					timekeeperExercise.startTimekeeper();
+//					timekeeperSet1.startTimekeeper();
+//					timekeeperWorkout.start();
+//					timekeeperExercise.start();
+//					timekeeperSet1.start();
+//					btnStart.setBackground(new Color(255, 255, 0));
+//				} else if (!timekeeperSet1.start) {
+//					timekeeperSet2.startTimekeeper();
+//					timekeeperSet2.start();
+//				} else if (!timekeeperSet2.start) {
+//					timekeeperSet3.startTimekeeper();
+//					timekeeperSet3.start();
+//				} else if (timekeeperWorkout.paused) {
+//					timekeeperWorkout.resumeTimekeeper();
+//					timekeeperExercise.resumeTimekeeper();
+//					btnStart.setBackground(new Color(255, 255, 0));
+//				} else {
+//					timekeeperWorkout.pauseTimekeeper();
+//					timekeeperExercise.pauseTimekeeper();
+//					btnStart.setBackground(new Color(0, 128, 0));
+//				}
 			}
 
 		});
@@ -180,7 +223,7 @@ public class PanelEjercicio {
 				if (exercise != null) {
 					String nameExercise = exercise.getNameExercise();
 					String descExercise = exercise.getDescription();
-					rest = exercise.getRest();
+					int rest = exercise.getRest();
 					int[] sets = exercise.getSets();
 					String nameWorkout = exercise.getName();
 
@@ -190,18 +233,23 @@ public class PanelEjercicio {
 					for (int i = 0; i < sets.length; i++) {
 						int set = sets[i];
 						if (i == 0) {
-							lblExerciseSet1.setText("Set " + (i + 1) + " " + formatTime(set));
+							lblExerciseSet1.setText("Set " + (i + 1) + ": " + formatTime(set));
+							timekeeperSet1 = new Timekeeper("Set 1", lblExerciseSet1, true, set);
 						} else if (i == 1) {
 							formatTime(set);
-							lblExerciseSet2.setText("Set " + (i + 1) + " " + formatTime(set));
+							lblExerciseSet2.setText("Set " + (i + 1) + ": " + formatTime(set));
+							timekeeperSet2 = new Timekeeper("Set 2", lblExerciseSet2, true, set);
 						} else {
 							formatTime(set);
-							lblExerciseSet3.setText("Set " + (i + 1) + " " + formatTime(set));
+							lblExerciseSet3.setText("Set " + (i + 1) + ": " + formatTime(set));
+							timekeeperSet3 = new Timekeeper("Set 3", lblExerciseSet3, true, set);
 						}
 					}
 
 					timekeeperWorkout = new Timekeeper("TimeKeeper Workout", lblWorkoutTimekeeper, false, 0);
 					timekeeperExercise = new Timekeeper("Exercise Time", lblExerciseTime, false, 0);
+					timekeeperRest = new Timekeeper("Rest", lblRest, true, rest);
+
 				} else {
 					JOptionPane.showMessageDialog(null, "there are no more exercises", "Error",
 							JOptionPane.ERROR_MESSAGE);
@@ -233,8 +281,6 @@ public class PanelEjercicio {
 						+ "Tiempo total: %s minutos<br>" + "Porcentaje completado: %.2f%%<br><br>"
 						+ "<i>%s</i></body></html>",
 				completedExercises, totalExercises, formatTime(totalTime), completionPercentage, motivationalMessage);
-
-		// Mostrar el resumen usando JOptionPane
 		JOptionPane.showMessageDialog(null, workoutSummary, "Workout Summary", JOptionPane.CLOSED_OPTION);
 	}
 
