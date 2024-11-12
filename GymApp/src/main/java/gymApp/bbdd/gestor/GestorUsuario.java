@@ -48,6 +48,11 @@ public class GestorUsuario extends GestorAbstract {
 		db.close();
 		return usuario;
 	}
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> origin/jordy
 
 	public void addUser(String name, String surname, String email, String birthdate, String password) throws Exception {
 		db = connection.getConnection();
@@ -76,6 +81,7 @@ public class GestorUsuario extends GestorAbstract {
 		db.close();
 
 	}
+<<<<<<< HEAD
 
 	public Usuario getAllData(String name, String surname, String birthdate, String email, String password)
 			throws Exception {
@@ -146,3 +152,6 @@ public class GestorUsuario extends GestorAbstract {
 	}
 
 }
+=======
+}
+>>>>>>> origin/jordy

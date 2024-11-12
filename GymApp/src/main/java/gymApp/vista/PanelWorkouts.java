@@ -26,9 +26,12 @@ import javax.swing.table.DefaultTableModel;
 
 import gymApp.bbdd.pojos.Ejercicio;
 import gymApp.bbdd.pojos.Workout;
+import gymApp.logica.ControladorEjercicio;
 import gymApp.logica.ControladorWorkouts;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -46,9 +49,12 @@ public class PanelWorkouts {
 	private ArrayList<Ejercicio> exercises;
 	private PanelHistorico panelHistorico;
 
-	public PanelWorkouts(ArrayList<JPanel> paneles, PanelHistorico panelHistorico) {
+
+	public PanelWorkouts(ArrayList<JPanel> paneles, PanelHistorico panelHistorico,  PanelEjercicio panelEjercicio) {
 		this.panelHistorico = panelHistorico;
+
 		try {
+			
 			ArrayList<Workout> workouts = null;
 			panel = new JPanel();
 			panel.setBounds(0, 0, 1499, 878);
@@ -72,6 +78,21 @@ public class PanelWorkouts {
 			scrollPaneWorkout.setBorder(null);
 			scrollPaneWorkout.setOpaque(false);
 			scrollPaneWorkout.getViewport().setOpaque(false);
+			
+			JButton btnNewButton = new JButton("New button");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panelEjercicio.refresPanelExercise(0);
+					paneles.get(0).setVisible(false);
+					paneles.get(1).setVisible(false);
+					paneles.get(2).setVisible(false);
+					paneles.get(3).setVisible(true);
+					paneles.get(4).setVisible(false);
+					paneles.get(5).setVisible(false);
+				}
+			});
+			btnNewButton.setBounds(782, 697, 138, 31);
+			panel.add(btnNewButton);
 
 			JButton btnHistorico = new JButton("Historico");
 
@@ -184,7 +205,7 @@ public class PanelWorkouts {
 				showInfoWorkout(workout);
 				showVideoWorkout(workout);
 				showExercisesTable(workout.getId());
-
+				ControladorEjercicio.getInstance().setId(workout.getId());
 			}
 		});
 	}
