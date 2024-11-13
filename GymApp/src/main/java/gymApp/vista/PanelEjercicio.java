@@ -125,7 +125,7 @@ public class PanelEjercicio {
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (timekeeperWorkout.isAlive()) {
+				if (timekeeperWorkout != null) {
 					timekeeperWorkout.interrupt();
 					timekeeperExercise.interrupt();
 					timekeeperCountDown.interrupt();
@@ -188,114 +188,13 @@ public class PanelEjercicio {
 						paneles.get(4).setVisible(false);
 						paneles.get(5).setVisible(false);
 					}
-				} else if (timekeeperWorkout.isAlive() && !timekeeperWorkout.paused) {
-					timekeeperWorkout.pauseTimekeeper();
-					timekeeperExercise.pauseTimekeeper();
-					timekeeperSet1.pauseTimekeeper();
-					timekeeperSet2.pauseTimekeeper();
-					timekeeperSet3.pauseTimekeeper();
-					btnStart.setBackground(new Color(0, 128, 0));
-					btnStart.setText("Start");
-				} else if (timekeeperWorkout.isAlive() && timekeeperWorkout.paused) {
-					timekeeperWorkout.resumeTimekeeper();
-					timekeeperExercise.resumeTimekeeper();
-					timekeeperSet1.resumeTimekeeper();
-					timekeeperSet2.resumeTimekeeper();
-					timekeeperSet3.resumeTimekeeper();
-					btnStart.setBackground(new Color(255, 255, 0));
-					btnStart.setText("Pause");
+				} else if (!timekeeperWorkout.running) {
+					startExercise();
+				} else if (!timekeeperWorkout.paused) {
+					pauseExercise();
 				} else {
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								if (!timekeeperWorkout.start || !timekeeperExercise.start) {
-									timekeeperCountDown.startTimekeeper();
-									timekeeperCountDown.start();
-									timekeeperCountDown.join();
-									lblCountDown.setText("");
-
-									btnStart.setBackground(new Color(255, 255, 0));
-									btnStart.setText("Pause");
-									if (currentExercise == 0) {
-										timekeeperWorkout.startTimekeeper();
-										timekeeperExercise.startTimekeeper();
-										timekeeperWorkout.start();
-										timekeeperExercise.start();
-									} else {
-										timekeeperExercise.startTimekeeper();
-										timekeeperExercise.start();
-									}
-									timekeeperSet1.startTimekeeper();
-									timekeeperSet1.start();
-									currentSet++;
-									timekeeperSet1.join();
-
-									btnStart.setBackground(new Color(0, 128, 0));
-									btnStart.setText("Start");
-									Thread.sleep(1000);
-									timekeeperRest.startTimekeeper();
-									timekeeperRest.start();
-									timekeeperRest.join();
-									lblRest.setText("Rest: " + rest + "s");
-								} else if (currentSet == 1 && !timekeeperSet2.start) {
-									timekeeperRest.interrupt();
-									timekeeperCountDown = new Timekeeper("Starts in", lblCountDown, true, 5);
-									timekeeperCountDown.startTimekeeper();
-									timekeeperCountDown.start();
-									timekeeperCountDown.join();
-									lblCountDown.setText("");
-
-									btnStart.setBackground(new Color(255, 255, 0));
-									btnStart.setText("Pause");
-									timekeeperSet2.startTimekeeper();
-									timekeeperSet2.start();
-									currentSet++;
-									timekeeperSet2.join();
-
-									btnStart.setBackground(new Color(0, 128, 0));
-									btnStart.setText("Start");
-									Thread.sleep(1000);
-									timekeeperRest = new Timekeeper("Rest", lblRest, true, rest);
-									timekeeperRest.startTimekeeper();
-									timekeeperRest.start();
-									timekeeperRest.join();
-									lblRest.setText("Rest: " + rest + "s");
-								} else if (currentSet == 2 && !timekeeperSet3.start) {
-									timekeeperRest.interrupt();
-									timekeeperCountDown = new Timekeeper("Starts in", lblCountDown, true, 5);
-									timekeeperCountDown.startTimekeeper();
-									timekeeperCountDown.start();
-									timekeeperCountDown.join();
-									lblCountDown.setText("");
-
-									btnStart.setBackground(new Color(255, 255, 0));
-									btnStart.setText("Pause");
-									timekeeperSet3.startTimekeeper();
-									timekeeperSet3.start();
-									timekeeperSet3.join();
-
-									btnStart.setBackground(new Color(0, 128, 0));
-									btnStart.setText("Start");
-									Thread.sleep(1000);
-									timekeeperRest = new Timekeeper("Rest", lblRest, true, rest);
-									timekeeperRest.startTimekeeper();
-									timekeeperRest.start();
-									timekeeperRest.join();
-
-									btnStart.setBackground(new Color(0, 128, 0));
-									btnStart.setText("Next Exercise");
-									nextExercise = true;
-								}
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								JOptionPane.showMessageDialog(null, "Error starting rest", "Error",
-										JOptionPane.ERROR_MESSAGE);
-							}
-						}
-					}).start();
+					resumeExercise();
 				}
-
 			}
 
 		});
@@ -310,9 +209,111 @@ public class PanelEjercicio {
 		panel.add(fondo);
 	}
 
+	private void startExercise() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (!timekeeperWorkout.start || !timekeeperExercise.start) {
+						timekeeperCountDown.startTimekeeper();
+						timekeeperCountDown.start();
+						timekeeperCountDown.join();
+						lblCountDown.setText("");
+
+						btnStart.setBackground(new Color(255, 255, 0));
+						btnStart.setText("Pause");
+						if (currentExercise == 0) {
+							timekeeperWorkout.startTimekeeper();
+							timekeeperExercise.startTimekeeper();
+							timekeeperWorkout.start();
+							timekeeperExercise.start();
+						} else {
+							timekeeperExercise.startTimekeeper();
+							timekeeperExercise.start();
+						}
+						timekeeperSet1.startTimekeeper();
+						timekeeperSet1.start();
+						currentSet++;
+						timekeeperSet1.join();
+
+						btnStart.setBackground(new Color(0, 128, 0));
+						btnStart.setText("Start");
+						Thread.sleep(1000);
+						timekeeperRest.startTimekeeper();
+						timekeeperRest.start();
+						timekeeperRest.join();
+						lblRest.setText("Rest: " + rest + "s");
+					} else if (currentSet == 1 && !timekeeperSet2.start) {
+						timekeeperRest.interrupt();
+						timekeeperCountDown = new Timekeeper("Starts in", lblCountDown, true, 5);
+						timekeeperCountDown.startTimekeeper();
+						timekeeperCountDown.start();
+						timekeeperCountDown.join();
+						lblCountDown.setText("");
+
+						btnStart.setBackground(new Color(255, 255, 0));
+						btnStart.setText("Pause");
+						timekeeperSet2.startTimekeeper();
+						timekeeperSet2.start();
+						currentSet++;
+						timekeeperSet2.join();
+
+						btnStart.setBackground(new Color(0, 128, 0));
+						btnStart.setText("Start");
+						Thread.sleep(1000);
+						timekeeperRest = new Timekeeper("Rest", lblRest, true, rest);
+						timekeeperRest.startTimekeeper();
+						timekeeperRest.start();
+						timekeeperRest.join();
+						lblRest.setText("Rest: " + rest + "s");
+					} else if (currentSet == 2 && !timekeeperSet3.start) {
+						timekeeperRest.interrupt();
+						timekeeperCountDown = new Timekeeper("Starts in", lblCountDown, true, 5);
+						timekeeperCountDown.startTimekeeper();
+						timekeeperCountDown.start();
+						timekeeperCountDown.join();
+						lblCountDown.setText("");
+
+						btnStart.setBackground(new Color(255, 255, 0));
+						btnStart.setText("Pause");
+						timekeeperSet3.startTimekeeper();
+						timekeeperSet3.start();
+						timekeeperSet3.join();
+
+						btnStart.setBackground(new Color(0, 128, 0));
+						btnStart.setText("Start");
+						Thread.sleep(1000);
+						timekeeperRest = new Timekeeper("Rest", lblRest, true, rest);
+						timekeeperRest.startTimekeeper();
+						timekeeperRest.start();
+						timekeeperRest.join();
+
+						btnStart.setBackground(new Color(0, 128, 0));
+						btnStart.setText("Next Exercise");
+						nextExercise = true;
+					}
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					JOptionPane.showMessageDialog(null, "Error starting rest", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}).start();
+	}
+
+	private void pauseExercise() {
+		timekeeperWorkout.pauseTimekeeper();
+	}
+
+	private void resumeExercise() {
+		timekeeperWorkout.resumeTimekeeper();
+	}
+
 	public void refresPanelExercise(int numExercise) {
 		btnStart.setText("Start");
-		lblWorkoutTimekeeper.setText("TimeKeeper Workout: 00:00");
+		
+		if (numExercise == 0) {
+			lblWorkoutTimekeeper.setText("TimeKeeper Workout: 00:00");
+		}
 		lblExerciseTime.setText("Exercise time: 00:00");
 		currentSet = 0;
 		nextExercise = false;
