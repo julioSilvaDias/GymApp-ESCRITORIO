@@ -5,14 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
 import gymApp.bbdd.gestor.GestorEjercicio;
 import gymApp.bbdd.pojos.Ejercicio;
-import gymApp.bbdd.pojos.Workout;
 import gymApp.logica.backup.Backup;
-
 public class ControladorEjercicio {
 
 	private String id = null;
@@ -72,7 +68,6 @@ public class ControladorEjercicio {
 
 		int exitCode = process.waitFor();
 		if (exitCode != 0) {
-			System.err.println("Error al ejecutar el proceso de backup. Código de salida: " + exitCode);
 		}
 	}
 

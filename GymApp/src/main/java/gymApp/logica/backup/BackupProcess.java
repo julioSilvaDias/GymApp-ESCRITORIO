@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -26,6 +25,7 @@ public class BackupProcess {
 	private static final File FILE_EXERCISES = new File(RUTA_EXERCISES);
 	private static final String RUTA_HISTORY_XML = "ficheros/history.xml";
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage: java BackupProcess <backup_file>");
@@ -113,6 +113,7 @@ public class BackupProcess {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void saveWorkout(Workout workout) throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_WORKOUT, true));
 		dos.writeUTF("\n" + "name: " + workout.getName() + "\n");
@@ -130,6 +131,7 @@ public class BackupProcess {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void saveExercise(Ejercicio exercise) throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_EXERCISES, true));
 		dos.writeUTF("\n" + "name: " + exercise.getNameExercise() + "\n");
@@ -179,6 +181,7 @@ public class BackupProcess {
 		doc.getDocumentElement().appendChild(historyElement);
 	}
 
+	@SuppressWarnings("unused")
 	public void saveHistoriesToXml(ArrayList<History> histories) {
 		try {
 			File xmlFile = new File(RUTA_HISTORY_XML);

@@ -292,18 +292,6 @@ public class PanelEjercicio {
 		panel.add(fondo);
 	}
 
-	private void startExercise() {
-		
-	}
-
-	private void pauseExercise() {
-		timekeeperWorkout.pauseTimekeeper();
-	}
-
-	private void resumeExercise() {
-		timekeeperWorkout.resumeTimekeeper();
-	}
-
 	public void refresPanelExercise(int numExercise) {
 		btnStart.setText("Start");
 		

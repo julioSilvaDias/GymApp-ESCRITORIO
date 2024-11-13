@@ -51,7 +51,6 @@ public class ControladorHistorico {
 
 		int exitCode = process.waitFor();
 		if (exitCode != 0) {
-			System.err.println("Error al ejecutar el proceso de backup. Código de salida: " + exitCode);
 		}
 	}
 }

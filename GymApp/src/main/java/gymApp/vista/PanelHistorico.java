@@ -1,20 +1,14 @@
 package gymApp.vista;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.Font;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
 import gymApp.bbdd.pojos.History;
 import gymApp.logica.ControladorHistorico;
 import java.awt.event.ActionListener;

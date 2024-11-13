@@ -23,14 +23,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-
 import gymApp.bbdd.pojos.Ejercicio;
 import gymApp.bbdd.pojos.Workout;
 import gymApp.logica.ControladorEjercicio;
 import gymApp.logica.ControladorWorkouts;
 import javax.swing.JTable;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

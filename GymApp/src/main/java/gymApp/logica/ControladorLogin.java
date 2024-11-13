@@ -71,7 +71,6 @@ public class ControladorLogin {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempFile))) {
 			oos.writeObject(user);
 		} catch (IOException e) {
-			System.err.println("Error al escribir el archivo temporal del usuario: " + e.getMessage());
 			throw e;
 		}
 
@@ -83,7 +82,6 @@ public class ControladorLogin {
 
 		int exitCode = process.waitFor();
 		if (exitCode != 0) {
-			System.err.println("Error al ejecutar el proceso de backup. Código de salida: " + exitCode);
 		}
 	}
 }

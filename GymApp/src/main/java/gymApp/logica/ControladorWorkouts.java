@@ -38,19 +38,18 @@ public class ControladorWorkouts {
 
 	public ArrayList<Ejercicio> getExercisesById(String id)
 			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
-		
+
 		GestorEjercicio gestorEjercicio = new GestorEjercicio();
 		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 		Backup backup = new Backup();
 		boolean conection = backup.isConnectionAvailable();
-		
-		if(conection) {
+
+		if (conection) {
 			ret = gestorEjercicio.getInfo(id);
-		}else {
+		} else {
 			ret = backup.getExercises();
 		}
-		
-		
+
 		return ret;
 	}
 
@@ -58,26 +57,23 @@ public class ControladorWorkouts {
 			throws IOException, InterruptedException, ExecutionException {
 		File tempWorkoutsFile = File.createTempFile("workoutsBackup", ".tmp");
 		tempWorkoutsFile.deleteOnExit();
-
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempWorkoutsFile))) {
 			oos.writeObject(workouts);
 		} catch (IOException e) {
-			System.err.println("Error al escribir el ArrayList<Workout> en el archivo temporal.");
 			e.printStackTrace();
 			throw e;
 		}
 
 		ProcessBuilder processBuilder = new ProcessBuilder("java", "-cp", "target/classes",
 				"gymApp.logica.backup.BackupProcess", tempWorkoutsFile.getAbsolutePath());
-
 		processBuilder.inheritIO();
 		Process process = processBuilder.start();
 
 		int exitCode = process.waitFor();
 		if (exitCode != 0) {
-			System.err.println("Error al ejecutar el proceso de backup. Código de salida: " + exitCode);
+
 		} else {
-			System.out.println("Proceso de backup para workouts completado con éxito.");
+
 		}
 	}
 }
