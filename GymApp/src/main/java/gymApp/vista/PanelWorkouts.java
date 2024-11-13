@@ -110,13 +110,13 @@ public class PanelWorkouts {
 			scrollPaneExercises.setViewportView(tableExercises);
 
 			videoThumbnail = new JLabel();
-			videoThumbnail.setBounds(533, 428, 402, 300);
+			videoThumbnail.setBounds(463, 414, 497, 320);
 			panel.add(videoThumbnail);
 
 			infoWorkout = new JLabel("");
 			infoWorkout.setFont(new Font("Arial", Font.PLAIN, 20));
 			infoWorkout.setForeground(new Color(255, 255, 255));
-			infoWorkout.setBounds(533, 142, 402, 203);
+			infoWorkout.setBounds(521, 142, 402, 203);
 			panel.add(infoWorkout);
 
 			JLabel backgroundLabel = new JLabel();
