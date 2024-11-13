@@ -46,6 +46,7 @@ public class GestorUsuario extends GestorAbstract {
 		}
 
 		db.close();
+
 		return usuario;
 	}
 
@@ -93,7 +94,20 @@ public class GestorUsuario extends GestorAbstract {
 			usuario.setEmail(user.getString("email"));
 			usuario.setPassword(user.getString("password"));
 		}
+		
+		return usuario;
+	}
 
+	public Usuario exitsUser(String name) throws Exception {
+		db = connection.getConnection();
+		Usuario usuario = new Usuario();
+
+		ApiFuture<QuerySnapshot> query = db.collection(COLLECTION_USERS).whereEqualTo(KEY_NAME, name).get();
+		QuerySnapshot querySnapshot = query.get();
+		List<QueryDocumentSnapshot> users = querySnapshot.getDocuments();
+		for (QueryDocumentSnapshot user : users) {
+			usuario.setName(user.getString(KEY_NAME));
+		}
 		db.close();
 
 		return usuario;
@@ -143,4 +157,5 @@ public class GestorUsuario extends GestorAbstract {
 		}
 
 		db.close();
-	}}
+	}
+}

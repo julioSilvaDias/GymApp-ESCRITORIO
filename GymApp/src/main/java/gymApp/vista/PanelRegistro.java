@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import gymApp.bbdd.pojos.Usuario;
 import gymApp.logica.ControladorRegistro;
 
 public class PanelRegistro {
@@ -30,12 +31,11 @@ public class PanelRegistro {
 	private JTextField textFieldPass;
 	private JButton btnRegister;
 
-
 	public PanelRegistro(ArrayList<JPanel> paneles) {
 		panel = new JPanel();
 		panel.setBounds(0, 0, 1499, 878);
 		panel.setLayout(null);
-		
+
 		JLabel lblName = new JLabel("Name");
 		lblName.setFont(new Font("Corbel", Font.BOLD, 25));
 		lblName.setForeground(new Color(255, 255, 255));
@@ -117,39 +117,45 @@ public class PanelRegistro {
 		panel.add(btnNewButton);
 
 		btnRegister = new JButton("Register");
+		btnRegister.setEnabled(false);
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new ControladorRegistro().addUser(textFieldName.getText(), textFieldSurname.getText(),
-							textFieldEmail.getText(), textFieldBirthdate.getText(), textFieldPass.getText());
-					
-					JOptionPane.showMessageDialog(null, "You have registered!", "Mensaje",
-							JOptionPane.INFORMATION_MESSAGE);
-					paneles.get(0).setVisible(true);
-					paneles.get(1).setVisible(false);
-					paneles.get(2).setVisible(false);
-					paneles.get(3).setVisible(false);
-					paneles.get(4).setVisible(false);
-					paneles.get(5).setVisible(false);
-					textFieldName.setText("");
-					textFieldSurname.setText("");
-					textFieldEmail.setText("");
-					textFieldBirthdate.setText("");
-					textFieldPass.setText("");
+					Usuario userExists = new ControladorRegistro().existsUser(textFieldName.getText());
+					if (userExists.getName() != null) {
+						JOptionPane.showMessageDialog(null, "User already exists", "Information",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						new ControladorRegistro().addUser(textFieldName.getText(), textFieldSurname.getText(),
+								textFieldEmail.getText(), textFieldBirthdate.getText(), textFieldPass.getText());
+						JOptionPane.showMessageDialog(null, "You have registered!", "Information",
+								JOptionPane.INFORMATION_MESSAGE);
+						paneles.get(0).setVisible(true);
+						paneles.get(1).setVisible(false);
+						paneles.get(2).setVisible(false);
+						paneles.get(3).setVisible(false);
+						paneles.get(4).setVisible(false);
+						paneles.get(5).setVisible(false);
+						textFieldName.setText("");
+						textFieldSurname.setText("");
+						textFieldEmail.setText("");
+						textFieldBirthdate.setText("");
+						textFieldPass.setText("");
+					}
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Error registering", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error database", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		btnRegister.setBounds(890, 764, 114, 47);
 		panel.add(btnRegister);
-		
+
 		JLabel fondo = new JLabel("");
 		fondo.setIcon(new ImageIcon(PanelLogin.class.getResource("/images/REGISTRO.png")));
 		fondo.setBounds(0, 0, 1499, 878);
 		panel.add(fondo);
 	}
-	
+
 	private DocumentListener validate() {
 		return new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
@@ -167,15 +173,23 @@ public class PanelRegistro {
 	}
 
 	protected void enableButton() {
-		boolean habilitar = validateEmail(textFieldEmail.getText()) && validateBirthdate(textFieldBirthdate.getText());
+		boolean habilitar = false;
+		if (!textFieldName.getText().isEmpty() && !textFieldSurname.getText().isEmpty()
+				&& !textFieldEmail.getText().isEmpty() && !textFieldBirthdate.getText().isEmpty()
+				&& !textFieldPass.getText().isEmpty() && validateEmail(textFieldEmail.getText())
+				&& validateBirthdate(textFieldBirthdate.getText())) {
+			habilitar = true;
+		}else {
+			habilitar = false;
+		}
 
-		btnRegister.setEnabled(habilitar);		
+		btnRegister.setEnabled(habilitar);
 	}
 
 	private boolean validateEmail(String email) {
 		return Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$", email);
 	}
-	
+
 	private boolean validateBirthdate(String birthDate) {
 		if (birthDate.matches("\\d{2}-\\d{2}-\\d{4}")) {
 			try {
