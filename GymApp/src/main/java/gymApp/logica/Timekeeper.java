@@ -40,10 +40,6 @@ public class Timekeeper extends Thread {
 		notify();
 	}
 
-	public void stopTimekeeper() {
-		interrupt();
-	}
-
 	@Override
 	public void run() {
 		while (start) {
@@ -55,12 +51,16 @@ public class Timekeeper extends Thread {
 				} else {
 					counter++;
 				}
-				label.setText(getName() + ": " + formatTime(counter));
+
+				if (getName() == "Rest" || getName() == "Starts in") {
+					label.setText(getName() + ": " + counter + "s");
+				} else {
+					label.setText(getName() + ": " + formatTime(counter));
+				}
 			}
 
 			if (isCountDown && counter <= 0) {
-				start = false;
-				running = false;
+				interrupt();
 			}
 
 			try {
@@ -73,13 +73,14 @@ public class Timekeeper extends Thread {
 			} catch (InterruptedException e) {
 				start = false;
 				running = false;
+				paused = false;
 			}
 		}
 	}
-	
+
 	private String formatTime(int totalSeconds) {
-	    int minutes = totalSeconds / 60;
-	    int seconds = totalSeconds % 60;
-	    return String.format("%02d:%02d", minutes, seconds);
+		int minutes = totalSeconds / 60;
+		int seconds = totalSeconds % 60;
+		return String.format("%02d:%02d", minutes, seconds);
 	}
 }
