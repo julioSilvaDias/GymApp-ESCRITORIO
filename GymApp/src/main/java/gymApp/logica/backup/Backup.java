@@ -117,7 +117,7 @@ public class Backup {
 	}
 
 	public ArrayList<Ejercicio> getExercises() throws FileNotFoundException, IOException {
-		ArrayList<Ejercicio> ret = null;
+		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 
 		FileInputStream file = new FileInputStream(FILE_EXERCISES);
 		DataInputStream fic = new DataInputStream(file);

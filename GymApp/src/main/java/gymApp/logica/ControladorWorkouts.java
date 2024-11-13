@@ -38,7 +38,20 @@ public class ControladorWorkouts {
 
 	public ArrayList<Ejercicio> getExercisesById(String id)
 			throws FileNotFoundException, IOException, ExecutionException, InterruptedException, Exception {
-		return new GestorEjercicio().getNameExercisesbyId(id);
+		
+		GestorEjercicio gestorEjercicio = new GestorEjercicio();
+		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
+		Backup backup = new Backup();
+		boolean conection = backup.isConnectionAvailable();
+		
+		if(conection) {
+			ret = gestorEjercicio.getInfo(id);
+		}else {
+			ret = backup.getExercises();
+		}
+		
+		
+		return ret;
 	}
 
 	public void launchBackupProcess(ArrayList<Workout> workouts)

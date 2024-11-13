@@ -42,9 +42,9 @@ public class GestorEjercicio extends GestorAbstract {
 		return ret;
 	}
 
-	public List<Ejercicio> getInfo(String id) throws InterruptedException, ExecutionException, Exception {
+	public ArrayList<Ejercicio> getInfo(String id) throws InterruptedException, ExecutionException, Exception {
 		firestore = connection.getConnection();
-		List<Ejercicio> exercises = new ArrayList<Ejercicio>();
+		ArrayList<Ejercicio> exercises = new ArrayList<Ejercicio>();
 
 		CollectionReference workouts = firestore.collection(COLLECTION_WORKOUTS);
 		DocumentReference workout = workouts.document(id);

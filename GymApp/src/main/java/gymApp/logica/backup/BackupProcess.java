@@ -28,7 +28,7 @@ public class BackupProcess {
 
 	public static void main(String[] args) {
 		if (args.length < 1) {
-			System.err.println("Usage: java BackupProcess <backup_file>");
+			System.out.println("Usage: java BackupProcess <backup_file>");
 			System.exit(1);
 		}
 
@@ -36,32 +36,37 @@ public class BackupProcess {
 
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(backupFile))) {
 			Object objeto = ois.readObject();
-
 			BackupProcess backupProcess = new BackupProcess();
 
 			if (objeto instanceof Usuario) {
+
 				backupProcess.saveUser((Usuario) objeto);
 				System.out.println("Usuario backed up successfully.");
 			} else if (objeto instanceof Workout) {
+
 				backupProcess.saveWorkout((Workout) objeto);
 				System.out.println("Workout backed up successfully.");
 			} else if (objeto instanceof Ejercicio) {
+
 				backupProcess.saveExercise((Ejercicio) objeto);
 				System.out.println("Ejercicio backed up successfully.");
 			} else if (objeto instanceof ArrayList<?>) {
 				ArrayList<?> list = (ArrayList<?>) objeto;
+
 				if (!list.isEmpty()) {
-					Object firstElement = list.get(0);
-					if (firstElement instanceof Usuario) {
+
+					String className = list.get(0).getClass().getName();
+
+					if (className.equals("gymApp.bbdd.pojos.Usuario")) {
 						backupProcess.saveUsers((ArrayList<Usuario>) list);
 						System.out.println("Usuarios backed up successfully.");
-					} else if (firstElement instanceof Workout) {
+					} else if (className.equals("gymApp.bbdd.pojos.Workout")) {
 						backupProcess.saveWorkouts((ArrayList<Workout>) list);
 						System.out.println("Workouts backed up successfully.");
-					} else if (firstElement instanceof Ejercicio) {
+					} else if (className.equals("gymApp.bbdd.pojos.Ejercicio")) {
 						backupProcess.saveExercises((ArrayList<Ejercicio>) list);
 						System.out.println("Ejercicios backed up successfully.");
-					} else if (firstElement instanceof History) {
+					} else if (className.equals("gymApp.bbdd.pojos.History")) {
 						backupProcess.saveHistoriesToXml((ArrayList<History>) list);
 						System.out.println("Histories backed up successfully to XML.");
 					} else {
@@ -84,11 +89,6 @@ public class BackupProcess {
 
 	public void saveUsers(ArrayList<Usuario> users) throws IOException {
 
-		if (FILE_EXERCISES.exists()) {
-			new FileOutputStream(FILE_EXERCISES).close();
-			
-		}
-		
 		for (Usuario user : users) {
 			saveUser(user);
 		}
@@ -107,10 +107,7 @@ public class BackupProcess {
 	}
 
 	public void saveWorkouts(ArrayList<Workout> workouts) throws IOException {
-		if (FILE_WORKOUT.exists()) {
-			new FileOutputStream(FILE_WORKOUT).close();
-			
-		}
+
 		for (Workout workout : workouts) {
 			saveWorkout(workout);
 		}
@@ -127,10 +124,7 @@ public class BackupProcess {
 	}
 
 	public void saveExercises(ArrayList<Ejercicio> exercises) throws IOException {
-		
-	    if (FILE_EXERCISES.exists()) {
-	        new FileOutputStream(FILE_EXERCISES).close();
-	    }
+
 		for (Ejercicio exercise : exercises) {
 			saveExercise(exercise);
 		}
@@ -138,7 +132,7 @@ public class BackupProcess {
 
 	public void saveExercise(Ejercicio exercise) throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(FILE_EXERCISES, true));
-		dos.writeUTF("\n" + "name: " + exercise.getName() + "\n");
+		dos.writeUTF("\n" + "name: " + exercise.getNameExercise() + "\n");
 		dos.writeUTF("image: " + exercise.getImage() + "\n");
 		dos.writeUTF("description: " + exercise.getDescription() + "\n");
 		dos.writeUTF("rest: " + exercise.getRest() + "\n");
@@ -187,28 +181,37 @@ public class BackupProcess {
 
 	public void saveHistoriesToXml(ArrayList<History> histories) {
 		try {
+			File xmlFile = new File(RUTA_HISTORY_XML);
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+			Document doc;
 
-			Element rootElement = doc.createElement("Histories");
-			doc.appendChild(rootElement);
+			if (xmlFile.exists()) {
+				doc = docBuilder.parse(xmlFile);
+				doc.getDocumentElement().normalize();
+			} else {
+				doc = docBuilder.newDocument();
+				Element rootElement = doc.createElement("Histories");
+				doc.appendChild(rootElement);
+			}
+
+			Element rootElement = doc.getDocumentElement();
 
 			for (History history : histories) {
 				saveHistory(doc, history);
+
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(xmlFile);
+				transformer.transform(source, result);
+
+				System.out.println("Histories appended to XML successfully.");
+
 			}
-
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(RUTA_HISTORY_XML));
-			transformer.transform(source, result);
-
-			System.out.println("Histories saved to XML successfully.");
-
-		} catch (ParserConfigurationException | TransformerException e) {
+		} catch (Exception e) {
 			System.err.println("Error saving histories to XML: " + e.getMessage());
 			e.printStackTrace();
 		}

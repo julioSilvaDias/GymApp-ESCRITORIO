@@ -38,9 +38,9 @@ public class ControladorEjercicio {
 		return id;
 	}
 
-	public List<Ejercicio> getInfo(String idWorkout) throws InterruptedException, ExecutionException, Exception {
+	public ArrayList<Ejercicio> getInfo(String idWorkout) throws InterruptedException, ExecutionException, Exception {
 
-		List<Ejercicio> ret = new ArrayList<Ejercicio>();
+		ArrayList<Ejercicio> ret = new ArrayList<Ejercicio>();
 		Backup backup = new Backup();
 		boolean conection = backup.isConnectionAvailable();
 
@@ -56,7 +56,7 @@ public class ControladorEjercicio {
 		return ret;
 	}
 
-	public void launchBackupProcess(List<Ejercicio> ejercicios) throws IOException, InterruptedException {
+	public void launchBackupProcess(ArrayList<Ejercicio> ejercicios) throws IOException, InterruptedException {
 		File tempEjerciciosFile = File.createTempFile("ejerciciosBackup", ".tmp");
 		tempEjerciciosFile.deleteOnExit();
 

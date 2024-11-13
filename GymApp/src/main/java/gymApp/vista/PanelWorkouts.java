@@ -79,7 +79,7 @@ public class PanelWorkouts {
 			scrollPaneWorkout.setOpaque(false);
 			scrollPaneWorkout.getViewport().setOpaque(false);
 			
-			JButton btnNewButton = new JButton("New button");
+			JButton btnNewButton = new JButton("Start");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					panelEjercicio.refresPanelExercise(0);
@@ -91,10 +91,10 @@ public class PanelWorkouts {
 					paneles.get(5).setVisible(false);
 				}
 			});
-			btnNewButton.setBounds(782, 697, 138, 31);
+			btnNewButton.setBounds(647, 786, 138, 31);
 			panel.add(btnNewButton);
 
-			JButton btnHistorico = new JButton("Historico");
+			JButton btnHistorico = new JButton("History");
 
 			btnHistorico.setBounds(1201, 43, 89, 23);
 			panel.add(btnHistorico);
@@ -216,7 +216,7 @@ public class PanelWorkouts {
 			model.setRowCount(0);
 
 			for (Ejercicio ejercicio : exercises) {
-				Object[] vector = { ejercicio.getName() };
+				Object[] vector = { ejercicio.getNameExercise() };
 				model.addRow(vector);
 			}
 		} catch (FileNotFoundException e) {
